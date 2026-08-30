@@ -76,6 +76,10 @@ const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 
 const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+// 🔑 HARDCODED ADMIN CREDENTIALS
+const ADMIN_EMAIL = 'skyline@admin.com';
+const ADMIN_PASSWORD = 'Admin123';
+
 const state = {
   users: [], accounts: [], transactions: [], pendingRequests: [], tickets: [], notifications: [], charts: {}
 };
@@ -125,7 +129,111 @@ const emptyState = (icon, title, subtitle) => `
 `;
 
 // ==========================================
-// DIRECT LOAD (NO AUTH CHECKS)
+// 🔐 AUTHENTICATION SYSTEM
+// ==========================================
+function checkAuth() {
+  const isLoggedIn = sessionStorage.getItem('adminLoggedIn') === 'true';
+  if (isLoggedIn) {
+    loadDashboard();
+  } else {
+    renderLogin();
+  }
+}
+
+function renderLogin() {
+  $('#app').innerHTML = `
+    <div class="min-h-screen gradient-ink flex items-center justify-center p-4 relative overflow-hidden">
+      <div class="orb w-96 h-96 bg-brand-gold top-0 -left-20"></div>
+      <div class="orb w-96 h-96 bg-rose-500 bottom-0 -right-20"></div>
+      <div class="w-full max-w-md relative z-10 fade-in">
+        <div class="flex items-center justify-center gap-3 mb-8">
+          <div class="w-12 h-12 gradient-admin rounded-xl flex items-center justify-center">
+            <i data-lucide="shield" class="w-6 h-6 text-white"></i>
+          </div>
+          <div>
+            <div class="font-display font-bold text-white text-xl leading-none">SKYLINE</div>
+            <div class="text-[10px] tracking-[0.3em] text-brand-gold font-semibold">ADMIN CONSOLE</div>
+          </div>
+        </div>
+        <div class="glass rounded-3xl p-8 shadow-2xl">
+          <div class="text-center mb-8">
+            <div class="w-16 h-16 gradient-admin rounded-2xl flex items-center justify-center mx-auto mb-4">
+              <i data-lucide="lock" class="w-8 h-8 text-white"></i>
+            </div>
+            <h1 class="font-display text-2xl font-bold text-white mb-2">Administrator Access</h1>
+            <p class="text-slate-400 text-sm">Sign in with your admin credentials</p>
+          </div>
+          <div id="authAlert" class="hidden mb-4 p-3 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-300 text-sm flex items-start gap-2">
+            <i data-lucide="alert-circle" class="w-4 h-4 flex-shrink-0 mt-0.5"></i>
+            <span id="authAlertText">Incorrect email or password.</span>
+          </div>
+          <form id="loginForm" class="space-y-4">
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 mb-1.5 tracking-wider">ADMIN EMAIL</label>
+              <div class="relative">
+                <i data-lucide="mail" class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500"></i>
+                <input type="email" id="loginEmail" required class="input-field w-full pl-11 pr-4 py-3 rounded-xl" placeholder="skyline@admin.com">
+              </div>
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 mb-1.5 tracking-wider">PASSWORD</label>
+              <div class="relative">
+                <i data-lucide="lock" class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500"></i>
+                <input type="password" id="loginPassword" required class="input-field w-full pl-11 pr-4 py-3 rounded-xl" placeholder="••••••••">
+              </div>
+            </div>
+            <button type="submit" id="loginBtn" class="btn-primary w-full py-3.5 rounded-xl flex items-center justify-center gap-2">
+              <i data-lucide="shield-check" class="w-4 h-4"></i>
+              <span>Access Admin Console</span>
+            </button>
+          </form>
+          <div class="mt-6 text-center text-xs text-slate-500">
+            <a href="index.html" class="text-brand-gold hover:text-brand-blue font-semibold">← Back to Skyline Capital</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+  lucide.createIcons();
+
+  $('#loginForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const email = $('#loginEmail').value.trim();
+    const password = $('#loginPassword').value;
+    const btn = $('#loginBtn');
+    const alert = $('#authAlert');
+
+    btn.disabled = true;
+    btn.innerHTML = '<div class="w-5 h-5 border-2 border-ink-950/30 border-t-ink-950 rounded-full animate-spin"></div>';
+    alert.classList.add('hidden');
+
+    // Simulate network delay for realism
+    setTimeout(() => {
+      if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
+        sessionStorage.setItem('adminLoggedIn', 'true');
+        loadDashboard();
+      } else {
+        alert.classList.remove('hidden');
+        btn.disabled = false;
+        btn.innerHTML = '<i data-lucide="shield-check" class="w-4 h-4"></i><span>Access Admin Console</span>';
+        lucide.createIcons();
+      }
+    }, 600);
+  });
+}
+
+async function loadDashboard() {
+  await loadAllData();
+  renderShell('overview');
+}
+
+function doLogout() { 
+  sessionStorage.removeItem('adminLoggedIn');
+  window.location.reload(); 
+}
+
+// ==========================================
+// DATA LOADING
 // ==========================================
 async function loadAllData() {
   const [users, accounts, transactions, tickets, notifications] = await Promise.all([
@@ -193,7 +301,6 @@ function renderShell(view) {
 
 function toggleSidebar() { $('#sidebar').classList.toggle('open'); $('#sidebarOverlay').classList.toggle('hidden'); }
 function switchView(view) { renderShell(view); if (window.innerWidth < 1024) toggleSidebar(); }
-function doLogout() { window.location.href = 'index.html'; }
 
 // --- OVERVIEW ---
 function renderOverview() {
@@ -230,7 +337,7 @@ function renderOverview() {
             const isCredit = tx.type === 'credit';
             return `<div class="p-4 hover:bg-white/5 transition flex items-center gap-4">
               <div class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 ${isCredit ? 'bg-emerald-500/10' : 'bg-rose-500/10'}"><i data-lucide="${isCredit ? 'arrow-down-left' : 'arrow-up-right'}" class="w-5 h-5 ${isCredit ? 'text-emerald-400' : 'text-rose-400'}"></i></div>
-              <div class="flex-1 min-w-0"><div class="font-semibold text-white text-sm truncate">${tx.description || 'Transaction'}</div><div class="text-xs text-slate-500">${user?.full_name || 'Unknown user'} · ${fmtDate(tx.created_at)}</div></div>
+              <div class="flex-1 min-w-0"><div class="font-semibold text-white text-sm truncate">${tx.type === 'transfer' ? 'Transfer' : (tx.description || 'Transaction')}</div><div class="text-xs text-slate-500">${user?.full_name || 'Unknown user'} · ${fmtDate(tx.created_at)}</div></div>
               <div class="text-right"><div class="font-display font-bold text-sm ${isCredit ? 'text-emerald-400' : 'text-white'}">${isCredit ? '+' : '-'}${fmt(tx.amount)}</div><div class="text-xs ${tx.status === 'completed' ? 'text-emerald-400' : tx.status === 'pending' ? 'text-amber-400' : 'text-rose-400'} capitalize">${tx.status}</div></div>
             </div>`;
           }).join('')}
@@ -301,7 +408,7 @@ window.openAdjustBalance = (userId) => {
     if (action === 'remove' && newBalance < 0) { toast('Insufficient funds', 'error'); return; }
     try {
       await sb.from('accounts').update({ balance: newBalance, available_balance: newBalance }).eq('id', account.id);
-      await sb.from('transactions').insert({ user_id: userId, account_id: account.id, type: action === 'add' ? 'credit' : 'debit', category: 'admin', description: `Admin: ${reason}`, amount: amount, currency: 'USD', reference: 'ADJ' + Date.now().toString().slice(-8), status: 'completed' });
+      await sb.from('transactions').insert({ user_id: userId, type: action === 'add' ? 'credit' : 'debit', amount: amount, status: 'completed' });
       toast('Balance adjusted', 'success');
       closeModal();
       await loadAllData();
@@ -351,7 +458,7 @@ function renderTransactions() {
   let search = '', typeFilter = 'all', statusFilter = 'all';
   const render = () => {
     let list = [...state.transactions];
-    if (search) list = list.filter(t => (t.description || '').toLowerCase().includes(search.toLowerCase()));
+    if (search) list = list.filter(t => (t.type === 'transfer' ? 'Transfer' : (t.description || '')).toLowerCase().includes(search.toLowerCase()));
     if (typeFilter !== 'all') list = list.filter(t => t.type === typeFilter);
     if (statusFilter !== 'all') list = list.filter(t => t.status === statusFilter);
     $('#pageContent').innerHTML = `
@@ -359,7 +466,7 @@ function renderTransactions() {
         <div class="p-6 border-b border-white/5 grid md:grid-cols-3 gap-3">
           <div class="relative md:col-span-2"><i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500"></i><input id="txSearch" type="text" placeholder="Search..." value="${search}" class="input-field w-full pl-10 pr-4 py-2 rounded-xl text-sm"></div>
           <div class="flex gap-2">
-            <select id="txType" class="input-field flex-1 px-3 py-2 rounded-xl text-sm"><option value="all" ${typeFilter==='all'?'selected':''}>All Types</option><option value="credit" ${typeFilter==='credit'?'selected':''}>Credit</option><option value="debit" ${typeFilter==='debit'?'selected':''}>Debit</option></select>
+            <select id="txType" class="input-field flex-1 px-3 py-2 rounded-xl text-sm"><option value="all" ${typeFilter==='all'?'selected':''}>All Types</option><option value="credit" ${typeFilter==='credit'?'selected':''}>Credit</option><option value="debit" ${typeFilter==='debit'?'selected':''}>Debit</option><option value="transfer" ${typeFilter==='transfer'?'selected':''}>Transfer</option></select>
             <select id="txStatus" class="input-field flex-1 px-3 py-2 rounded-xl text-sm"><option value="all" ${statusFilter==='all'?'selected':''}>All Status</option><option value="completed" ${statusFilter==='completed'?'selected':''}>Completed</option><option value="pending" ${statusFilter==='pending'?'selected':''}>Pending</option></select>
           </div>
         </div>
@@ -370,9 +477,10 @@ function renderTransactions() {
               ${list.slice(0, 100).map(tx => {
                 const user = state.users.find(u => u.id === tx.user_id);
                 const isCredit = tx.type === 'credit';
+                const displayText = tx.type === 'transfer' ? 'Transfer' : (tx.description || '—');
                 return `<tr class="hover:bg-white/5 transition">
                   <td class="px-6 py-4"><div class="flex items-center gap-2"><div class="w-8 h-8 gradient-brand rounded-full flex items-center justify-center text-white font-bold text-xs">${(user?.full_name || 'U').charAt(0).toUpperCase()}</div><div class="text-sm"><div class="font-semibold text-white">${user?.full_name || 'Unknown'}</div></div></div></td>
-                  <td class="px-6 py-4 text-sm text-slate-300">${tx.description || '—'}</td>
+                  <td class="px-6 py-4 text-sm text-slate-300">${displayText}</td>
                   <td class="px-6 py-4"><span class="text-xs font-medium text-slate-400 capitalize">${tx.type}</span></td>
                   <td class="px-6 py-4 text-xs text-slate-500">${fmtDate(tx.created_at)}</td>
                   <td class="px-6 py-4"><span class="px-2 py-1 text-xs font-semibold rounded-full ${tx.status === 'completed' ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 'bg-amber-500/10 text-amber-400 border border-amber-500/20'} capitalize">${tx.status}</span></td>
@@ -405,10 +513,11 @@ function renderPending() {
             ${state.pendingRequests.map(tx => {
               const user = state.users.find(u => u.id === tx.user_id);
               const account = state.accounts.find(a => a.user_id === tx.user_id);
+              const displayText = tx.type === 'transfer' ? 'Transfer' : (tx.description || '—');
               return `<tr class="hover:bg-white/5 transition">
                 <td class="px-6 py-4"><div class="flex items-center gap-2"><div class="w-8 h-8 gradient-brand rounded-full flex items-center justify-center text-white font-bold text-xs">${(user?.full_name || 'U').charAt(0).toUpperCase()}</div><div class="text-sm"><div class="font-semibold text-white">${user?.full_name || 'Unknown'}</div><div class="text-xs text-slate-500">Bal: ${fmt(account?.balance || 0)}</div></div></div></td>
                 <td class="px-6 py-4"><span class="px-2 py-1 text-xs font-semibold rounded-full ${tx.type === 'credit' ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 'bg-rose-500/10 text-rose-400 border border-rose-500/20'} capitalize">${tx.type}</span></td>
-                <td class="px-6 py-4 text-sm text-slate-300">${tx.description || '—'}</td>
+                <td class="px-6 py-4 text-sm text-slate-300">${displayText}</td>
                 <td class="px-6 py-4 font-display font-bold text-white">${fmt(tx.amount)}</td>
                 <td class="px-6 py-4"><div class="flex gap-2 justify-end"><button onclick="approveTx('${tx.id}')" class="btn-approve px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1"><i data-lucide="check" class="w-3 h-3"></i>Approve</button><button onclick="rejectTx('${tx.id}')" class="btn-reject px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1"><i data-lucide="x" class="w-3 h-3"></i>Reject</button></div></td>
               </tr>`;
@@ -526,11 +635,10 @@ window.resolveTicket = async (id) => {
 };
 
 // ==========================================
-// INIT: DIRECT LOAD, NO AUTH
+// INIT: CHECK AUTH ON LOAD
 // ==========================================
-window.addEventListener('DOMContentLoaded', async () => {
-  await loadAllData();
-  renderShell('overview');
+window.addEventListener('DOMContentLoaded', () => {
+  checkAuth();
 });
 </script>
 </body>

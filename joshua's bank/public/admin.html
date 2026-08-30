@@ -15,10 +15,7 @@
   tailwind.config = {
     theme: {
       extend: {
-        fontFamily: {
-          sans: ['Inter', 'system-ui', 'sans-serif'],
-          display: ['Space Grotesk', 'Inter', 'sans-serif']
-        },
+        fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'], display: ['Space Grotesk', 'Inter', 'sans-serif'] },
         colors: {
           ink: { 950: '#050B1F', 900: '#0A1128', 800: '#0F1A3A', 700: '#1A2650', 600: '#2A3A6B' },
           brand: { cyan: '#22D3EE', blue: '#3B82F6', indigo: '#6366F1', gold: '#F4C430' }
@@ -32,11 +29,8 @@
   body { background: #050B1F; color: #E2E8F0; overflow-x: hidden; }
   .font-display { font-family: 'Space Grotesk', 'Inter', sans-serif; }
   .glass { background: rgba(255,255,255,0.06); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border: 1px solid rgba(255,255,255,0.1); }
-  .glass-strong { background: rgba(10,17,40,0.8); backdrop-filter: blur(30px); -webkit-backdrop-filter: blur(30px); border: 1px solid rgba(255,255,255,0.08); }
   .gradient-brand { background: linear-gradient(135deg, #22D3EE 0%, #3B82F6 50%, #6366F1 100%); }
   .gradient-ink { background: linear-gradient(180deg, #0A1128 0%, #050B1F 100%); }
-  .gradient-card { background: linear-gradient(135deg, #1A2650 0%, #0F1A3A 100%); }
-  .gradient-text { background: linear-gradient(135deg, #22D3EE 0%, #3B82F6 50%, #6366F1 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
   .gradient-admin { background: linear-gradient(135deg, #F4C430 0%, #F59E0B 50%, #EF4444 100%); }
   .fade-in { animation: fadeIn 0.5s ease-out; }
   @keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
@@ -44,14 +38,11 @@
   @keyframes scaleIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
   .slide-in-right { animation: slideInRight 0.35s cubic-bezier(0.16,1,0.3,1); }
   @keyframes slideInRight { from { transform: translateX(120%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
-  .skeleton { background: linear-gradient(90deg, rgba(255,255,255,0.04) 25%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.04) 75%); background-size: 200% 100%; animation: shimmer 1.5s infinite; border-radius: 8px; }
-  @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
   ::-webkit-scrollbar { width: 8px; height: 8px; }
   ::-webkit-scrollbar-track { background: transparent; }
   ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 4px; }
   .input-field { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); color: #E2E8F0; transition: all 0.2s; }
   .input-field:focus { outline: none; border-color: #F4C430; background: rgba(255,255,255,0.06); box-shadow: 0 0 0 3px rgba(244,196,48,0.15); }
-  .input-field::placeholder { color: rgba(148,163,184,0.6); }
   .nav-item { transition: all 0.2s; position: relative; }
   .nav-item:hover { background: rgba(244,196,48,0.08); color: #F4C430; }
   .nav-item.active { background: linear-gradient(90deg, rgba(244,196,48,0.15), transparent); color: #F4C430; }
@@ -61,65 +52,45 @@
   .btn-ghost { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #E2E8F0; transition: all 0.2s; }
   .btn-ghost:hover { background: rgba(255,255,255,0.1); border-color: rgba(244,196,48,0.3); }
   .btn-approve { background: linear-gradient(135deg, #10B981 0%, #059669 100%); color: white; }
-  .btn-approve:hover { transform: translateY(-1px); box-shadow: 0 8px 20px -5px rgba(16,185,129,0.4); }
   .btn-reject { background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%); color: white; }
-  .btn-reject:hover { transform: translateY(-1px); box-shadow: 0 8px 20px -5px rgba(239,68,68,0.4); }
   .orb { position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.3; pointer-events: none; }
   .admin-badge { background: linear-gradient(135deg, #F4C430, #EF4444); color: #0A1128; font-weight: 700; font-size: 10px; padding: 2px 8px; border-radius: 6px; letter-spacing: 0.5px; }
   @media (max-width: 1023px) {
     .sidebar-desktop { transform: translateX(-100%); transition: transform 0.3s; position: fixed; z-index: 50; }
     .sidebar-desktop.open { transform: translateX(0); }
   }
-  .no-scrollbar::-webkit-scrollbar { display: none; }
-  .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 </style>
 </head>
 <body>
 
 <div id="toastContainer" class="fixed top-4 right-4 z-[9999] space-y-2 pointer-events-none"></div>
-
 <div id="modalContainer" class="fixed inset-0 z-[9998] hidden bg-black/70 backdrop-blur-sm items-center justify-center p-4">
-  <div id="modalContent" class="glass-strong rounded-3xl shadow-2xl max-w-lg w-full p-6 scale-in pointer-events-auto max-h-[90vh] overflow-y-auto"></div>
+  <div id="modalContent" class="glass rounded-3xl shadow-2xl max-w-lg w-full p-6 scale-in pointer-events-auto max-h-[90vh] overflow-y-auto"></div>
 </div>
-
 <div id="app"></div>
 
 <script>
-// ============================================
 // ⚠️ REPLACE WITH YOUR SUPABASE CREDENTIALS
-// ============================================
 const SUPABASE_URL = 'https://amxoyqmuhmzlfabginjg.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFteG95cW11aG16bGZhYmdpbmpnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODgwNDEyOTMsImV4cCI6MjEwMzYxNzI5M30.UQIj0a7IbIIX8idr_zboWHRTcRK9izVpOLkY6i7aAeI';
 
-let sb = null;
-try { sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY); } catch (e) { console.error(e); }
+const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 const state = {
-  admin: null,
-  profile: null,
-  users: [],
-  accounts: [],
-  transactions: [],
-  pendingRequests: [],
-  tickets: [],
-  notifications: [],
-  charts: {}
+  users: [], accounts: [], transactions: [], pendingRequests: [], tickets: [], notifications: [], charts: {}
 };
 
 const $ = (s) => document.querySelector(s);
 const fmt = (n) => '$' + Number(n || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 const fmtDate = (d) => d ? new Date(d).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '—';
-const fmtDateTime = (d) => d ? new Date(d).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : '—';
 const fmtRelative = (d) => {
   if (!d) return '';
   const diff = (Date.now() - new Date(d)) / 1000;
   if (diff < 60) return 'just now';
   if (diff < 3600) return Math.floor(diff / 60) + 'm ago';
-  if (diff < 86400) return Math.floor(diff / 3600) + 'h ago';
   return fmtDate(d);
 };
 
-// ============ TOAST ============
 function toast(message, type = 'info') {
   const colors = { success: 'from-emerald-500 to-teal-500', error: 'from-rose-500 to-red-500', info: 'from-sky-500 to-blue-500', warning: 'from-amber-500 to-orange-500' };
   const icons = { success: 'check-circle-2', error: 'x-circle', info: 'info', warning: 'alert-triangle' };
@@ -131,7 +102,6 @@ function toast(message, type = 'info') {
   setTimeout(() => { el.style.transition = 'all 0.3s'; el.style.opacity = '0'; el.style.transform = 'translateX(120%)'; setTimeout(() => el.remove(), 300); }, 4000);
 }
 
-// ============ MODAL ============
 function openModal(html) {
   $('#modalContent').innerHTML = html;
   $('#modalContainer').classList.remove('hidden');
@@ -154,112 +124,9 @@ const emptyState = (icon, title, subtitle) => `
   </div>
 `;
 
-// ============ AUTH CHECK ============
-async function checkAuth() {
-  if (!sb || SUPABASE_URL === 'YOUR_SUPABASE_URL') {
-    renderSetupScreen();
-    return;
-  }
-  
-  const { data: { session } } = await sb.auth.getSession();
-  
-  // DEBUG: Log session info
-  console.log('=== DEBUG: Session Info ===');
-  console.log('Session exists:', !!session);
-  if (session) {
-    console.log('User ID:', session.user.id);
-    console.log('User Email:', session.user.email);
-    console.log('Email confirmed:', session.user.email_confirmed_at);
-  }
-  
-  if (!session) { 
-    renderLogin(); 
-    return; 
-  }
-
-  // Query the profile
-  const { data: profile, error: profileError } = await sb
-    .from('profiles')
-    .select('*')
-    .eq('id', session.user.id)
-    .maybeSingle();
-  
-  // DEBUG: Log profile query result
-  console.log('=== DEBUG: Profile Query ===');
-  console.log('Profile data:', profile);
-  console.log('Profile error:', profileError);
-  console.log('Profile role:', profile?.role);
-  console.log('Profile email:', profile?.email);
-  
-  // Also check what the auth user email is vs profile email
-  console.log('=== DEBUG: Email Comparison ===');
-  console.log('Auth email:', session.user.email);
-  console.log('Profile email:', profile?.email);
-  console.log('Emails match:', session.user.email === profile?.email);
-
-  // Check ALL profiles to see if user exists at all
-  const { data: allProfiles } = await sb.from('profiles').select('id, email, role');
-  console.log('=== DEBUG: All Profiles in DB ===');
-  console.log(allProfiles);
-  console.log('Found profile with matching email:', 
-    allProfiles?.find(p => p.email === session.user.email));
-
-  if (!profile) {
-    console.error('❌ Profile is NULL - RLS might be blocking or profile does not exist');
-    await sb.auth.signOut();
-    renderUnauthorizedDebug('Profile not found', profileError?.message || 'No profile returned from database');
-    return;
-  }
-  
-  if (profile.role !== 'admin') {
-    console.error('❌ Role is not admin:', profile.role);
-    await sb.auth.signOut();
-    renderUnauthorizedDebug('Not an admin', `Your role is "${profile.role}", not "admin"`);
-    return;
-  }
-
-  console.log('✅ Auth check passed! Loading admin dashboard...');
-  state.admin = session.user;
-  state.profile = profile;
-  await loadAllData();
-  renderShell('overview');
-}
-
-// New debug unauthorized screen
-function renderUnauthorizedDebug(title, details) {
-  $('#app').innerHTML = `
-    <div class="min-h-screen flex items-center justify-center p-6 gradient-ink relative overflow-hidden">
-      <div class="orb w-96 h-96 bg-rose-500 top-0 -left-20"></div>
-      <div class="glass-strong rounded-3xl p-10 max-w-2xl w-full text-left relative z-10 fade-in">
-        <div class="flex items-center gap-3 mb-6">
-          <div class="w-12 h-12 bg-rose-500/10 rounded-xl flex items-center justify-center border border-rose-500/20">
-            <i data-lucide="bug" class="w-6 h-6 text-rose-400"></i>
-          </div>
-          <div>
-            <h1 class="text-xl font-bold text-white font-display">${title}</h1>
-            <p class="text-slate-400 text-sm">${details}</p>
-          </div>
-        </div>
-        <div class="bg-ink-800 rounded-xl p-4 border border-white/5 font-mono text-sm mb-6">
-          <p class="text-slate-400 mb-2">Check the browser console (F12) for full debug info.</p>
-          <p class="text-brand-cyan">Common causes:</p>
-          <ul class="text-slate-300 mt-2 space-y-1 list-disc list-inside">
-            <li>Profile row doesn't exist (signup trigger failed)</li>
-            <li>Role is still "user" (not updated to "admin")</li>
-            <li>RLS policies are blocking access</li>
-            <li>Wrong email used during login</li>
-          </ul>
-        </div>
-        <div class="flex gap-3">
-          <button onclick="sb.auth.signOut().then(() => location.reload())" class="btn-ghost px-6 py-2.5 rounded-xl font-semibold flex-1">Sign Out & Retry</button>
-          <button onclick="location.reload()" class="btn-primary px-6 py-2.5 rounded-xl font-semibold flex-1">Refresh Page</button>
-        </div>
-      </div>
-    </div>
-  `;
-  lucide.createIcons();
-}
-
+// ==========================================
+// DIRECT LOAD (NO AUTH CHECKS)
+// ==========================================
 async function loadAllData() {
   const [users, accounts, transactions, tickets, notifications] = await Promise.all([
     sb.from('profiles').select('*').order('created_at', { ascending: false }),
@@ -276,337 +143,81 @@ async function loadAllData() {
   state.pendingRequests = state.transactions.filter(t => t.status === 'pending');
 }
 
-// ============ SETUP SCREEN ============
-function renderSetupScreen() {
-  $('#app').innerHTML = `
-    <div class="min-h-screen flex items-center justify-center p-6 gradient-ink relative overflow-hidden">
-      <div class="orb w-96 h-96 bg-brand-gold top-0 -left-20"></div>
-      <div class="orb w-96 h-96 bg-rose-500 bottom-0 -right-20"></div>
-      <div class="glass-strong rounded-3xl p-10 max-w-md w-full text-center relative z-10 fade-in">
-        <div class="w-16 h-16 gradient-admin rounded-2xl flex items-center justify-center mx-auto mb-6">
-          <i data-lucide="shield-alert" class="w-8 h-8 text-white"></i>
-        </div>
-        <h1 class="text-2xl font-bold text-white mb-2 font-display">Admin Configuration Required</h1>
-        <p class="text-slate-400 text-sm mb-6">Connect to your Supabase project to access the admin console.</p>
-        <div class="text-left space-y-3 text-sm">
-          <div class="p-3 rounded-xl bg-ink-800 border border-white/5"><div class="text-slate-400 text-xs mb-1">Step 1</div><div class="text-slate-200">Open <code class="text-brand-gold">admin.html</code></div></div>
-          <div class="p-3 rounded-xl bg-ink-800 border border-white/5"><div class="text-slate-400 text-xs mb-1">Step 2</div><div class="text-slate-200">Replace credentials at top of script</div></div>
-          <div class="p-3 rounded-xl bg-ink-800 border border-white/5"><div class="text-slate-400 text-xs mb-1">Step 3</div><div class="text-slate-200">Run admin SQL policies</div></div>
-          <div class="p-3 rounded-xl bg-ink-800 border border-white/5"><div class="text-slate-400 text-xs mb-1">Step 4</div><div class="text-slate-200">Set your role to 'admin' in profiles table</div></div>
-        </div>
-      </div>
-    </div>
-  `;
-  lucide.createIcons();
-}
-
-// ============ UNAUTHORIZED ============
-function renderUnauthorized() {
-  $('#app').innerHTML = `
-    <div class="min-h-screen flex items-center justify-center p-6 gradient-ink relative overflow-hidden">
-      <div class="orb w-96 h-96 bg-rose-500 top-0 -left-20"></div>
-      <div class="glass-strong rounded-3xl p-10 max-w-md w-full text-center relative z-10 fade-in">
-        <div class="w-16 h-16 bg-rose-500/10 rounded-2xl flex items-center justify-center mx-auto mb-6 border border-rose-500/20">
-          <i data-lucide="shield-x" class="w-8 h-8 text-rose-400"></i>
-        </div>
-        <h1 class="text-2xl font-bold text-white mb-2 font-display">Access Denied</h1>
-        <p class="text-slate-400 text-sm mb-6">This account does not have administrator privileges.</p>
-        <button onclick="sb.auth.signOut().then(() => location.reload())" class="btn-ghost px-6 py-2.5 rounded-xl font-semibold">Sign Out</button>
-      </div>
-    </div>
-  `;
-  lucide.createIcons();
-}
-
-// ============ LOGIN ============
-function renderLogin() {
-  $('#app').innerHTML = `
-    <div class="min-h-screen gradient-ink flex items-center justify-center p-4 relative overflow-hidden">
-      <div class="orb w-96 h-96 bg-brand-gold -top-20 -left-20"></div>
-      <div class="orb w-96 h-96 bg-rose-500 bottom-0 -right-20"></div>
-      <div class="w-full max-w-md relative z-10 fade-in">
-        <div class="flex items-center justify-center gap-3 mb-8">
-          <div class="w-12 h-12 gradient-admin rounded-xl flex items-center justify-center">
-            <i data-lucide="shield" class="w-6 h-6 text-white"></i>
-          </div>
-          <div>
-            <div class="font-display font-bold text-white text-xl leading-none">SKYLINE</div>
-            <div class="text-[10px] tracking-[0.3em] text-brand-gold font-semibold">ADMIN CONSOLE</div>
-          </div>
-        </div>
-        <div class="glass-strong rounded-3xl p-8 shadow-2xl">
-          <div class="text-center mb-8">
-            <div class="w-16 h-16 gradient-admin rounded-2xl flex items-center justify-center mx-auto mb-4">
-              <i data-lucide="lock" class="w-8 h-8 text-white"></i>
-            </div>
-            <h1 class="font-display text-2xl font-bold text-white mb-2">Administrator Access</h1>
-            <p class="text-slate-400 text-sm">Sign in with your admin credentials</p>
-          </div>
-          <div id="authAlert" class="hidden mb-4 p-3 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-300 text-sm flex items-start gap-2">
-            <i data-lucide="alert-circle" class="w-4 h-4 flex-shrink-0 mt-0.5"></i>
-            <span id="authAlertText"></span>
-          </div>
-          <form id="loginForm" class="space-y-4">
-            <div>
-              <label class="block text-xs font-semibold text-slate-300 mb-1.5 tracking-wider">ADMIN EMAIL</label>
-              <div class="relative">
-                <i data-lucide="mail" class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500"></i>
-                <input type="email" id="loginEmail" required class="input-field w-full pl-11 pr-4 py-3 rounded-xl" placeholder="admin@skyline.com" autocomplete="email">
-              </div>
-            </div>
-            <div>
-              <label class="block text-xs font-semibold text-slate-300 mb-1.5 tracking-wider">PASSWORD</label>
-              <div class="relative">
-                <i data-lucide="lock" class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500"></i>
-                <input type="password" id="loginPassword" required class="input-field w-full pl-11 pr-4 py-3 rounded-xl" placeholder="••••••••" autocomplete="current-password">
-              </div>
-            </div>
-            <button type="submit" id="loginBtn" class="btn-primary w-full py-3.5 rounded-xl flex items-center justify-center gap-2">
-              <i data-lucide="shield-check" class="w-4 h-4"></i>
-              <span>Access Admin Console</span>
-            </button>
-          </form>
-          <div class="mt-6 text-center text-xs text-slate-500">
-            <a href="index.html" class="text-brand-gold hover:text-brand-blue">← Back to Skyline Capital</a>
-          </div>
-        </div>
-      </div>
-    </div>
-  `;
-  lucide.createIcons();
-
-  $('#loginForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const btn = $('#loginBtn');
-    btn.disabled = true;
-    btn.innerHTML = '<div class="w-5 h-5 border-2 border-ink-950/30 border-t-ink-950 rounded-full animate-spin"></div>';
-    const { data, error } = await sb.auth.signInWithPassword({
-      email: $('#loginEmail').value,
-      password: $('#loginPassword').value
-    });
-    if (error) {
-      $('#authAlertText').textContent = 'Incorrect email or password.';
-      $('#authAlert').classList.remove('hidden');
-      btn.disabled = false;
-      btn.innerHTML = '<i data-lucide="shield-check" class="w-4 h-4"></i><span>Access Admin Console</span>';
-      lucide.createIcons();
-    } else {
-      checkAuth();
-    }
-  });
-}
-
-// ============ SHELL ============
 function renderShell(view) {
   const pendingCount = state.pendingRequests.length;
   const openTickets = state.tickets.filter(t => t.status === 'open').length;
-  const adminName = state.profile.full_name || state.admin.email.split('@')[0];
 
   $('#app').innerHTML = `
     <div class="flex min-h-screen gradient-ink">
-      <!-- SIDEBAR -->
       <aside id="sidebar" class="sidebar-desktop w-64 bg-ink-900 border-r border-white/5 h-screen flex flex-col lg:sticky lg:top-0">
         <div class="p-6 border-b border-white/5">
           <div class="flex items-center gap-3">
-            <div class="w-10 h-10 gradient-admin rounded-xl flex items-center justify-center">
-              <i data-lucide="shield" class="w-5 h-5 text-white"></i>
-            </div>
-            <div>
-              <div class="font-display font-bold text-white leading-none">SKYLINE</div>
-              <div class="text-[9px] tracking-[0.3em] text-brand-gold font-semibold">ADMIN</div>
-            </div>
+            <div class="w-10 h-10 gradient-admin rounded-xl flex items-center justify-center"><i data-lucide="shield" class="w-5 h-5 text-white"></i></div>
+            <div><div class="font-display font-bold text-white leading-none">SKYLINE</div><div class="text-[9px] tracking-[0.3em] text-brand-gold font-semibold">ADMIN</div></div>
           </div>
         </div>
-        <nav class="flex-1 p-4 overflow-y-auto no-scrollbar">
+        <nav class="flex-1 p-4 overflow-y-auto">
           <div class="text-[10px] font-semibold text-slate-500 uppercase tracking-widest mb-3 px-3">Overview</div>
-          <a href="#" onclick="switchView('overview'); return false;" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-300 text-sm font-medium mb-1 ${view==='overview'?'active':''}">
-            <i data-lucide="layout-dashboard" class="w-4 h-4"></i><span>Dashboard</span>
-          </a>
+          <a href="#" onclick="switchView('overview'); return false;" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-300 text-sm font-medium mb-1 ${view==='overview'?'active':''}"><i data-lucide="layout-dashboard" class="w-4 h-4"></i><span>Dashboard</span></a>
           <div class="text-[10px] font-semibold text-slate-500 uppercase tracking-widest mb-3 mt-6 px-3">Management</div>
-          <a href="#" onclick="switchView('users'); return false;" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-300 text-sm font-medium mb-1 ${view==='users'?'active':''}">
-            <i data-lucide="users" class="w-4 h-4"></i><span>Users</span>
-            <span class="ml-auto text-xs text-slate-500">${state.users.length}</span>
-          </a>
-          <a href="#" onclick="switchView('accounts'); return false;" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-300 text-sm font-medium mb-1 ${view==='accounts'?'active':''}">
-            <i data-lucide="wallet" class="w-4 h-4"></i><span>Accounts</span>
-          </a>
-          <a href="#" onclick="switchView('transactions'); return false;" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-300 text-sm font-medium mb-1 ${view==='transactions'?'active':''}">
-            <i data-lucide="arrow-left-right" class="w-4 h-4"></i><span>Transactions</span>
-          </a>
-          <a href="#" onclick="switchView('pending'); return false;" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-300 text-sm font-medium mb-1 ${view==='pending'?'active':''}">
-            <i data-lucide="clock" class="w-4 h-4"></i><span>Pending Requests</span>
-            ${pendingCount > 0 ? `<span class="ml-auto bg-rose-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full">${pendingCount}</span>` : ''}
-          </a>
-          <a href="#" onclick="switchView('tickets'); return false;" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-300 text-sm font-medium mb-1 ${view==='tickets'?'active':''}">
-            <i data-lucide="life-buoy" class="w-4 h-4"></i><span>Support</span>
-            ${openTickets > 0 ? `<span class="ml-auto bg-amber-500 text-ink-950 text-[10px] font-bold px-1.5 py-0.5 rounded-full">${openTickets}</span>` : ''}
-          </a>
+          <a href="#" onclick="switchView('users'); return false;" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-300 text-sm font-medium mb-1 ${view==='users'?'active':''}"><i data-lucide="users" class="w-4 h-4"></i><span>Users</span><span class="ml-auto text-xs text-slate-500">${state.users.length}</span></a>
+          <a href="#" onclick="switchView('accounts'); return false;" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-300 text-sm font-medium mb-1 ${view==='accounts'?'active':''}"><i data-lucide="wallet" class="w-4 h-4"></i><span>Accounts</span></a>
+          <a href="#" onclick="switchView('transactions'); return false;" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-300 text-sm font-medium mb-1 ${view==='transactions'?'active':''}"><i data-lucide="arrow-left-right" class="w-4 h-4"></i><span>Transactions</span></a>
+          <a href="#" onclick="switchView('pending'); return false;" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-300 text-sm font-medium mb-1 ${view==='pending'?'active':''}"><i data-lucide="clock" class="w-4 h-4"></i><span>Pending</span>${pendingCount > 0 ? `<span class="ml-auto bg-rose-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full">${pendingCount}</span>` : ''}</a>
+          <a href="#" onclick="switchView('tickets'); return false;" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-300 text-sm font-medium mb-1 ${view==='tickets'?'active':''}"><i data-lucide="life-buoy" class="w-4 h-4"></i><span>Support</span>${openTickets > 0 ? `<span class="ml-auto bg-amber-500 text-ink-950 text-[10px] font-bold px-1.5 py-0.5 rounded-full">${openTickets}</span>` : ''}</a>
           <div class="text-[10px] font-semibold text-slate-500 uppercase tracking-widest mb-3 mt-6 px-3">Communication</div>
-          <a href="#" onclick="switchView('broadcast'); return false;" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-300 text-sm font-medium mb-1 ${view==='broadcast'?'active':''}">
-            <i data-lucide="megaphone" class="w-4 h-4"></i><span>Broadcast</span>
-          </a>
-          <a href="#" onclick="switchView('audit'); return false;" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-300 text-sm font-medium mb-1 ${view==='audit'?'active':''}">
-            <i data-lucide="scroll-text" class="w-4 h-4"></i><span>Audit Log</span>
-          </a>
+          <a href="#" onclick="switchView('broadcast'); return false;" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-300 text-sm font-medium mb-1 ${view==='broadcast'?'active':''}"><i data-lucide="megaphone" class="w-4 h-4"></i><span>Broadcast</span></a>
         </nav>
         <div class="p-4 border-t border-white/5">
-          <div class="flex items-center gap-3 mb-3 p-2 rounded-xl bg-white/5">
-            <div class="w-9 h-9 gradient-admin rounded-full flex items-center justify-center text-white font-bold text-sm">${adminName.charAt(0).toUpperCase()}</div>
-            <div class="flex-1 min-w-0">
-              <div class="text-sm font-semibold text-white truncate">${adminName}</div>
-              <div class="text-xs text-slate-500 truncate">${state.admin.email}</div>
-            </div>
-          </div>
-          <button onclick="doLogout()" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-rose-400 text-sm font-medium hover:bg-rose-500/10">
-            <i data-lucide="log-out" class="w-4 h-4"></i><span>Logout</span>
-          </button>
+          <button onclick="doLogout()" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-rose-400 text-sm font-medium hover:bg-rose-500/10"><i data-lucide="log-out" class="w-4 h-4"></i><span>Back to App</span></button>
         </div>
       </aside>
 
-      <!-- MAIN -->
       <div class="flex-1 flex flex-col min-w-0">
         <header class="bg-ink-900/80 backdrop-blur-xl border-b border-white/5 px-6 py-4 flex items-center justify-between sticky top-0 z-30">
           <div class="flex items-center gap-4 flex-1">
             <button onclick="toggleSidebar()" class="lg:hidden text-slate-300"><i data-lucide="menu" class="w-6 h-6"></i></button>
-            <div>
-              <div class="flex items-center gap-2">
-                <h1 class="font-display text-xl font-bold text-white" id="pageTitle">Dashboard</h1>
-                <span class="admin-badge">ADMIN</span>
-              </div>
-              <p class="text-xs text-slate-500" id="pageSubtitle">System overview</p>
-            </div>
+            <div><div class="flex items-center gap-2"><h1 class="font-display text-xl font-bold text-white" id="pageTitle">Dashboard</h1><span class="admin-badge">ADMIN</span></div><p class="text-xs text-slate-500" id="pageSubtitle">System overview</p></div>
           </div>
-          <div class="flex items-center gap-2">
-            <button onclick="loadAllData().then(() => { renderShell('${view}'); toast('Data refreshed', 'success'); })" class="p-2 hover:bg-white/5 rounded-xl transition" title="Refresh">
-              <i data-lucide="refresh-cw" class="w-5 h-5 text-slate-300"></i>
-            </button>
-          </div>
+          <button onclick="loadAllData().then(() => { renderShell('${view}'); toast('Data refreshed', 'success'); })" class="p-2 hover:bg-white/5 rounded-xl transition"><i data-lucide="refresh-cw" class="w-5 h-5 text-slate-300"></i></button>
         </header>
-        <main class="flex-1 p-6 overflow-y-auto">
-          <div id="pageContent" class="fade-in max-w-7xl mx-auto"></div>
-        </main>
+        <main class="flex-1 p-6 overflow-y-auto"><div id="pageContent" class="fade-in max-w-7xl mx-auto"></div></main>
       </div>
     </div>
     <div id="sidebarOverlay" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-40 lg:hidden" onclick="toggleSidebar()"></div>
   `;
   lucide.createIcons();
-
-  const renderers = {
-    overview: renderOverview,
-    users: renderUsers,
-    accounts: renderAccounts,
-    transactions: renderTransactions,
-    pending: renderPending,
-    tickets: renderTickets,
-    broadcast: renderBroadcast,
-    audit: renderAudit
-  };
+  const renderers = { overview: renderOverview, users: renderUsers, accounts: renderAccounts, transactions: renderTransactions, pending: renderPending, tickets: renderTickets, broadcast: renderBroadcast };
   (renderers[view] || renderOverview)();
 }
 
-function toggleSidebar() {
-  $('#sidebar').classList.toggle('open');
-  $('#sidebarOverlay').classList.toggle('hidden');
-}
+function toggleSidebar() { $('#sidebar').classList.toggle('open'); $('#sidebarOverlay').classList.toggle('hidden'); }
+function switchView(view) { renderShell(view); if (window.innerWidth < 1024) toggleSidebar(); }
+function doLogout() { window.location.href = 'index.html'; }
 
-function switchView(view) {
-  renderShell(view);
-  if (window.innerWidth < 1024) toggleSidebar();
-}
-
-async function doLogout() {
-  await sb.auth.signOut();
-  state.admin = null;
-  state.profile = null;
-  toast('Logged out', 'info');
-  renderLogin();
-}
-
-// ============ AUDIT LOG ============
-async function logAudit(action, description) {
-  await sb.from('audit_logs').insert({
-    user_id: state.admin.id,
-    action: action,
-    description: description
-  });
-}
-
-// ============ OVERVIEW ============
+// --- OVERVIEW ---
 function renderOverview() {
   $('#pageTitle').textContent = 'Dashboard Overview';
   $('#pageSubtitle').textContent = 'System-wide metrics and activity';
-
   const totalBalance = state.accounts.reduce((s, a) => s + Number(a.balance || 0), 0);
-  const totalIncome = state.transactions.filter(t => t.type === 'credit').reduce((s, t) => s + Number(t.amount || 0), 0);
-  const totalExpenses = state.transactions.filter(t => t.type === 'debit' || t.type === 'transfer').reduce((s, t) => s + Number(t.amount || 0), 0);
   const openTickets = state.tickets.filter(t => t.status === 'open').length;
   const recentTx = state.transactions.slice(0, 8);
 
   $('#pageContent').innerHTML = `
-    <!-- Stats Grid -->
     <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
       ${[
-        { label: 'Total Users', value: state.users.length, icon: 'users', color: 'from-brand-cyan to-brand-blue', sub: 'Registered accounts' },
-        { label: 'Total Balance', value: fmt(totalBalance), icon: 'wallet', color: 'from-emerald-500 to-teal-500', sub: 'Across all accounts' },
-        { label: 'Pending Requests', value: state.pendingRequests.length, icon: 'clock', color: 'from-amber-500 to-orange-500', sub: 'Awaiting approval' },
-        { label: 'Open Tickets', value: openTickets, icon: 'life-buoy', color: 'from-rose-500 to-pink-500', sub: 'Support requests' }
+        { label: 'Total Users', value: state.users.length, icon: 'users', color: 'from-brand-cyan to-brand-blue' },
+        { label: 'Total Balance', value: fmt(totalBalance), icon: 'wallet', color: 'from-emerald-500 to-teal-500' },
+        { label: 'Pending Requests', value: state.pendingRequests.length, icon: 'clock', color: 'from-amber-500 to-orange-500' },
+        { label: 'Open Tickets', value: openTickets, icon: 'life-buoy', color: 'from-rose-500 to-pink-500' }
       ].map(s => `
         <div class="glass rounded-2xl p-5 hover:border-brand-gold/20 transition">
-          <div class="flex items-start justify-between mb-3">
-            <div class="w-10 h-10 bg-gradient-to-br ${s.color} rounded-xl flex items-center justify-center">
-              <i data-lucide="${s.icon}" class="w-5 h-5 text-white"></i>
-            </div>
-          </div>
+          <div class="w-10 h-10 bg-gradient-to-br ${s.color} rounded-xl flex items-center justify-center mb-3"><i data-lucide="${s.icon}" class="w-5 h-5 text-white"></i></div>
           <div class="text-xs text-slate-400 mb-1">${s.label}</div>
-          <div class="font-display text-2xl font-bold text-white mb-1">${s.value}</div>
-          <div class="text-xs text-slate-500">${s.sub}</div>
+          <div class="font-display text-2xl font-bold text-white">${s.value}</div>
         </div>
       `).join('')}
     </div>
-
-    <div class="grid lg:grid-cols-3 gap-6 mb-6">
-      <!-- Volume Chart -->
-      <div class="lg:col-span-2 glass rounded-2xl p-6">
-        <div class="flex items-center justify-between mb-6">
-          <div>
-            <h3 class="font-display font-bold text-white">Transaction Volume</h3>
-            <p class="text-xs text-slate-400">Income vs Expenses (last 7 days)</p>
-          </div>
-        </div>
-        <div style="height: 280px;">
-          ${state.transactions.length < 2 ? `<div class="h-full flex items-center justify-center text-center"><div><i data-lucide="bar-chart-3" class="w-10 h-10 text-slate-600 mb-3 mx-auto"></i><p class="text-sm text-slate-400">Not enough data</p></div></div>` : `<canvas id="volumeChart"></canvas>`}
-        </div>
-      </div>
-
-      <!-- Quick Actions -->
-      <div class="glass rounded-2xl p-6">
-        <h3 class="font-display font-bold text-white mb-4">Quick Actions</h3>
-        <div class="space-y-3">
-          <button onclick="switchView('pending')" class="w-full flex items-center gap-3 p-3 bg-white/5 hover:bg-white/10 rounded-xl transition text-left border border-white/5">
-            <div class="w-10 h-10 bg-amber-500/10 rounded-lg flex items-center justify-center"><i data-lucide="clock" class="w-5 h-5 text-amber-400"></i></div>
-            <div class="flex-1"><div class="font-semibold text-sm text-white">Review Pending</div><div class="text-xs text-slate-400">${state.pendingRequests.length} requests</div></div>
-            <i data-lucide="chevron-right" class="w-4 h-4 text-slate-500"></i>
-          </button>
-          <button onclick="switchView('broadcast')" class="w-full flex items-center gap-3 p-3 bg-white/5 hover:bg-white/10 rounded-xl transition text-left border border-white/5">
-            <div class="w-10 h-10 bg-brand-cyan/10 rounded-lg flex items-center justify-center"><i data-lucide="megaphone" class="w-5 h-5 text-brand-cyan"></i></div>
-            <div class="flex-1"><div class="font-semibold text-sm text-white">Send Broadcast</div><div class="text-xs text-slate-400">Notify all users</div></div>
-            <i data-lucide="chevron-right" class="w-4 h-4 text-slate-500"></i>
-          </button>
-          <button onclick="switchView('tickets')" class="w-full flex items-center gap-3 p-3 bg-white/5 hover:bg-white/10 rounded-xl transition text-left border border-white/5">
-            <div class="w-10 h-10 bg-rose-500/10 rounded-lg flex items-center justify-center"><i data-lucide="life-buoy" class="w-5 h-5 text-rose-400"></i></div>
-            <div class="flex-1"><div class="font-semibold text-sm text-white">Support Tickets</div><div class="text-xs text-slate-400">${openTickets} open</div></div>
-            <i data-lucide="chevron-right" class="w-4 h-4 text-slate-500"></i>
-          </button>
-          <button onclick="switchView('users')" class="w-full flex items-center gap-3 p-3 bg-white/5 hover:bg-white/10 rounded-xl transition text-left border border-white/5">
-            <div class="w-10 h-10 bg-emerald-500/10 rounded-lg flex items-center justify-center"><i data-lucide="user-plus" class="w-5 h-5 text-emerald-400"></i></div>
-            <div class="flex-1"><div class="font-semibold text-sm text-white">Manage Users</div><div class="text-xs text-slate-400">${state.users.length} total</div></div>
-            <i data-lucide="chevron-right" class="w-4 h-4 text-slate-500"></i>
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Recent Activity -->
     <div class="glass rounded-2xl overflow-hidden">
       <div class="p-6 border-b border-white/5 flex items-center justify-between">
         <div><h3 class="font-display font-bold text-white">Recent Activity</h3><p class="text-xs text-slate-400">Latest system-wide transactions</p></div>
@@ -615,138 +226,48 @@ function renderOverview() {
       ${recentTx.length === 0 ? emptyState('inbox', 'No activity yet', 'Transactions will appear here as users make them.') : `
         <div class="divide-y divide-white/5">
           ${recentTx.map(tx => {
-            const user = state.users.find(u => u.user_id === tx.user_id);
+            const user = state.users.find(u => u.id === tx.user_id);
             const isCredit = tx.type === 'credit';
-            return `
-              <div class="p-4 hover:bg-white/5 transition flex items-center gap-4">
-                <div class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 ${isCredit ? 'bg-emerald-500/10' : 'bg-rose-500/10'}">
-                  <i data-lucide="${isCredit ? 'arrow-down-left' : 'arrow-up-right'}" class="w-5 h-5 ${isCredit ? 'text-emerald-400' : 'text-rose-400'}"></i>
-                </div>
-                <div class="flex-1 min-w-0">
-                  <div class="font-semibold text-white text-sm truncate">${tx.description || 'Transaction'}</div>
-                  <div class="text-xs text-slate-500">${user?.full_name || 'Unknown user'} · ${fmtDate(tx.created_at)}</div>
-                </div>
-                <div class="text-right">
-                  <div class="font-display font-bold text-sm ${isCredit ? 'text-emerald-400' : 'text-white'}">${isCredit ? '+' : '-'}${fmt(tx.amount)}</div>
-                  <div class="text-xs ${tx.status === 'completed' ? 'text-emerald-400' : tx.status === 'pending' ? 'text-amber-400' : 'text-rose-400'} capitalize">${tx.status}</div>
-                </div>
-              </div>
-            `;
+            return `<div class="p-4 hover:bg-white/5 transition flex items-center gap-4">
+              <div class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 ${isCredit ? 'bg-emerald-500/10' : 'bg-rose-500/10'}"><i data-lucide="${isCredit ? 'arrow-down-left' : 'arrow-up-right'}" class="w-5 h-5 ${isCredit ? 'text-emerald-400' : 'text-rose-400'}"></i></div>
+              <div class="flex-1 min-w-0"><div class="font-semibold text-white text-sm truncate">${tx.description || 'Transaction'}</div><div class="text-xs text-slate-500">${user?.full_name || 'Unknown user'} · ${fmtDate(tx.created_at)}</div></div>
+              <div class="text-right"><div class="font-display font-bold text-sm ${isCredit ? 'text-emerald-400' : 'text-white'}">${isCredit ? '+' : '-'}${fmt(tx.amount)}</div><div class="text-xs ${tx.status === 'completed' ? 'text-emerald-400' : tx.status === 'pending' ? 'text-amber-400' : 'text-rose-400'} capitalize">${tx.status}</div></div>
+            </div>`;
           }).join('')}
         </div>
       `}
     </div>
   `;
   lucide.createIcons();
-
-  if (state.transactions.length >= 2) renderVolumeChart();
 }
 
-function renderVolumeChart() {
-  const ctx = $('#volumeChart');
-  if (!ctx) return;
-  if (state.charts.volume) state.charts.volume.destroy();
-
-  // Group by last 7 days
-  const days = [];
-  for (let i = 6; i >= 0; i--) {
-    const d = new Date();
-    d.setDate(d.getDate() - i);
-    days.push({ date: d.toISOString().split('T')[0], label: d.toLocaleDateString('en-US', { weekday: 'short' }), income: 0, expense: 0 });
-  }
-  state.transactions.forEach(tx => {
-    const txDate = new Date(tx.created_at).toISOString().split('T')[0];
-    const day = days.find(d => d.date === txDate);
-    if (day) {
-      if (tx.type === 'credit') day.income += Number(tx.amount);
-      else day.expense += Number(tx.amount);
-    }
-  });
-
-  state.charts.volume = new Chart(ctx, {
-    type: 'bar',
-    data: {
-      labels: days.map(d => d.label),
-      datasets: [
-        { label: 'Income', data: days.map(d => d.income), backgroundColor: '#10B981', borderRadius: 6 },
-        { label: 'Expenses', data: days.map(d => d.expense), backgroundColor: '#EF4444', borderRadius: 6 }
-      ]
-    },
-    options: {
-      responsive: true, maintainAspectRatio: false,
-      plugins: { legend: { labels: { color: '#94A3B8' } }, tooltip: { callbacks: { label: (c) => c.dataset.label + ': ' + fmt(c.parsed.y) } } },
-      scales: {
-        y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#64748B', callback: v => '$' + (v >= 1000 ? (v/1000).toFixed(1) + 'k' : v) } },
-        x: { grid: { display: false }, ticks: { color: '#64748B' } }
-      }
-    }
-  });
-}
-
-// ============ USERS ============
+// --- USERS ---
 function renderUsers() {
   $('#pageTitle').textContent = 'User Management';
   $('#pageSubtitle').textContent = `${state.users.length} registered users`;
-
   let search = '';
   const render = () => {
     let list = [...state.users];
     if (search) list = list.filter(u => (u.full_name || '').toLowerCase().includes(search.toLowerCase()) || (u.email || '').toLowerCase().includes(search.toLowerCase()));
-
     $('#pageContent').innerHTML = `
       <div class="glass rounded-2xl overflow-hidden">
-        <div class="p-6 border-b border-white/5">
-          <div class="relative max-w-md">
-            <i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500"></i>
-            <input id="userSearch" type="text" placeholder="Search users..." value="${search}" class="input-field w-full pl-10 pr-4 py-2 rounded-xl text-sm">
-          </div>
-        </div>
-        ${list.length === 0 ? emptyState('users', search ? 'No users found' : 'No users yet', search ? 'Try a different search term.' : 'Users will appear here after registration.') : `
-          <div class="overflow-x-auto">
-            <table class="w-full">
-              <thead class="bg-white/5">
-                <tr class="text-left text-xs font-semibold text-slate-400 uppercase tracking-wider">
-                  <th class="px-6 py-3">User</th>
-                  <th class="px-6 py-3">Account</th>
-                  <th class="px-6 py-3">Balance</th>
-                  <th class="px-6 py-3">Role</th>
-                  <th class="px-6 py-3">Joined</th>
-                  <th class="px-6 py-3 text-right">Actions</th>
-                </tr>
-              </thead>
-              <tbody class="divide-y divide-white/5">
-                ${list.map(u => {
-                  const account = state.accounts.find(a => a.user_id === u.user_id);
-                  return `
-                    <tr class="hover:bg-white/5 transition">
-                      <td class="px-6 py-4">
-                        <div class="flex items-center gap-3">
-                          <div class="w-10 h-10 gradient-brand rounded-full flex items-center justify-center text-white font-bold text-sm">${(u.full_name || 'U').charAt(0).toUpperCase()}</div>
-                          <div>
-                            <div class="font-semibold text-white text-sm">${u.full_name || 'Unnamed'}</div>
-                            <div class="text-xs text-slate-500">${u.email}</div>
-                          </div>
-                        </div>
-                      </td>
-                      <td class="px-6 py-4 text-sm font-mono text-slate-300">${account?.account_number || '—'}</td>
-                      <td class="px-6 py-4 text-sm font-display font-bold text-white">${fmt(account?.balance || 0)}</td>
-                      <td class="px-6 py-4">
-                        <span class="px-2 py-1 text-xs font-semibold rounded-full ${u.role === 'admin' ? 'bg-brand-gold/20 text-brand-gold border border-brand-gold/30' : 'bg-white/5 text-slate-400 border border-white/10'}">${u.role || 'user'}</span>
-                      </td>
-                      <td class="px-6 py-4 text-xs text-slate-500">${fmtDate(u.created_at)}</td>
-                      <td class="px-6 py-4 text-right">
-                        <div class="flex gap-2 justify-end">
-                          <button onclick="openAdjustBalance('${u.user_id}')" class="p-2 hover:bg-brand-cyan/10 rounded-lg text-brand-cyan transition" title="Adjust balance"><i data-lucide="wallet" class="w-4 h-4"></i></button>
-                          <button onclick="openUserDetail('${u.user_id}')" class="p-2 hover:bg-white/10 rounded-lg text-slate-300 transition" title="View details"><i data-lucide="eye" class="w-4 h-4"></i></button>
-                          <button onclick="openSendNotification('${u.user_id}')" class="p-2 hover:bg-brand-gold/10 rounded-lg text-brand-gold transition" title="Send notification"><i data-lucide="bell" class="w-4 h-4"></i></button>
-                        </div>
-                      </td>
-                    </tr>
-                  `;
-                }).join('')}
-              </tbody>
-            </table>
-          </div>
+        <div class="p-6 border-b border-white/5"><div class="relative max-w-md"><i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500"></i><input id="userSearch" type="text" placeholder="Search users..." value="${search}" class="input-field w-full pl-10 pr-4 py-2 rounded-xl text-sm"></div></div>
+        ${list.length === 0 ? emptyState('users', search ? 'No users found' : 'No users yet', 'Users will appear here after registration.') : `
+          <div class="overflow-x-auto"><table class="w-full">
+            <thead class="bg-white/5"><tr class="text-left text-xs font-semibold text-slate-400 uppercase tracking-wider"><th class="px-6 py-3">User</th><th class="px-6 py-3">Account</th><th class="px-6 py-3">Balance</th><th class="px-6 py-3">Role</th><th class="px-6 py-3 text-right">Actions</th></tr></thead>
+            <tbody class="divide-y divide-white/5">
+              ${list.map(u => {
+                const account = state.accounts.find(a => a.user_id === u.id);
+                return `<tr class="hover:bg-white/5 transition">
+                  <td class="px-6 py-4"><div class="flex items-center gap-3"><div class="w-10 h-10 gradient-brand rounded-full flex items-center justify-center text-white font-bold text-sm">${(u.full_name || 'U').charAt(0).toUpperCase()}</div><div><div class="font-semibold text-white text-sm">${u.full_name || 'Unnamed'}</div><div class="text-xs text-slate-500">${u.email}</div></div></div></td>
+                  <td class="px-6 py-4 text-sm font-mono text-slate-300">${account?.account_number || '—'}</td>
+                  <td class="px-6 py-4 text-sm font-display font-bold text-white">${fmt(account?.balance || 0)}</td>
+                  <td class="px-6 py-4"><span class="px-2 py-1 text-xs font-semibold rounded-full ${u.role === 'admin' ? 'bg-brand-gold/20 text-brand-gold border border-brand-gold/30' : 'bg-white/5 text-slate-400 border border-white/10'}">${u.role || 'user'}</span></td>
+                  <td class="px-6 py-4 text-right"><div class="flex gap-2 justify-end"><button onclick="openAdjustBalance('${u.id}')" class="p-2 hover:bg-brand-cyan/10 rounded-lg text-brand-cyan transition"><i data-lucide="wallet" class="w-4 h-4"></i></button></div></td>
+                </tr>`;
+              }).join('')}
+            </tbody>
+          </table></div>
         `}
       </div>
     `;
@@ -757,41 +278,19 @@ function renderUsers() {
 }
 
 window.openAdjustBalance = (userId) => {
-  const user = state.users.find(u => u.user_id === userId);
+  const user = state.users.find(u => u.id === userId);
   const account = state.accounts.find(a => a.user_id === userId);
   if (!user || !account) return;
-
   openModal(`
-    <div class="flex items-center justify-between mb-6">
-      <h3 class="font-display text-xl font-bold text-white">Adjust Balance</h3>
-      <button onclick="closeModal()" class="p-1 hover:bg-white/10 rounded-lg"><i data-lucide="x" class="w-5 h-5 text-slate-400"></i></button>
-    </div>
-    <div class="p-4 bg-white/5 rounded-xl border border-white/5 mb-4">
-      <div class="flex items-center gap-3">
-        <div class="w-10 h-10 gradient-brand rounded-full flex items-center justify-center text-white font-bold">${(user.full_name || 'U').charAt(0).toUpperCase()}</div>
-        <div><div class="font-semibold text-white">${user.full_name}</div><div class="text-xs text-slate-400">Current: ${fmt(account.balance)}</div></div>
-      </div>
-    </div>
+    <div class="flex items-center justify-between mb-6"><h3 class="font-display text-xl font-bold text-white">Adjust Balance</h3><button onclick="closeModal()" class="p-1 hover:bg-white/10 rounded-lg"><i data-lucide="x" class="w-5 h-5 text-slate-400"></i></button></div>
+    <div class="p-4 bg-white/5 rounded-xl border border-white/5 mb-4"><div class="flex items-center gap-3"><div class="w-10 h-10 gradient-brand rounded-full flex items-center justify-center text-white font-bold">${(user.full_name || 'U').charAt(0).toUpperCase()}</div><div><div class="font-semibold text-white">${user.full_name}</div><div class="text-xs text-slate-400">Current: ${fmt(account.balance)}</div></div></div></div>
     <form id="adjustForm" class="space-y-4">
-      <div>
-        <label class="block text-xs font-semibold text-slate-300 mb-1.5 tracking-wider">ACTION</label>
-        <select id="adjAction" class="input-field w-full px-4 py-2.5 rounded-xl">
-          <option value="add">Add Funds (Credit)</option>
-          <option value="remove">Remove Funds (Debit)</option>
-        </select>
-      </div>
-      <div>
-        <label class="block text-xs font-semibold text-slate-300 mb-1.5 tracking-wider">AMOUNT (USD)</label>
-        <input type="number" id="adjAmount" required min="0.01" step="0.01" class="input-field w-full px-4 py-2.5 rounded-xl font-display font-bold text-lg" placeholder="0.00">
-      </div>
-      <div>
-        <label class="block text-xs font-semibold text-slate-300 mb-1.5 tracking-wider">REASON</label>
-        <input type="text" id="adjReason" required class="input-field w-full px-4 py-2.5 rounded-xl" placeholder="Admin adjustment">
-      </div>
+      <div><label class="block text-xs font-semibold text-slate-300 mb-1.5 tracking-wider">ACTION</label><select id="adjAction" class="input-field w-full px-4 py-2.5 rounded-xl"><option value="add">Add Funds (Credit)</option><option value="remove">Remove Funds (Debit)</option></select></div>
+      <div><label class="block text-xs font-semibold text-slate-300 mb-1.5 tracking-wider">AMOUNT (USD)</label><input type="number" id="adjAmount" required min="0.01" step="0.01" class="input-field w-full px-4 py-2.5 rounded-xl font-display font-bold text-lg" placeholder="0.00"></div>
+      <div><label class="block text-xs font-semibold text-slate-300 mb-1.5 tracking-wider">REASON</label><input type="text" id="adjReason" required class="input-field w-full px-4 py-2.5 rounded-xl" placeholder="Admin adjustment"></div>
       <button type="submit" class="btn-primary w-full py-3 rounded-xl">Apply Adjustment</button>
     </form>
   `);
-
   $('#adjustForm').addEventListener('submit', async (e) => {
     e.preventDefault();
     const action = $('#adjAction').value;
@@ -799,26 +298,10 @@ window.openAdjustBalance = (userId) => {
     const reason = $('#adjReason').value;
     const currentBalance = Number(account.balance || 0);
     const newBalance = action === 'add' ? currentBalance + amount : currentBalance - amount;
-
     if (action === 'remove' && newBalance < 0) { toast('Insufficient funds', 'error'); return; }
-
     try {
       await sb.from('accounts').update({ balance: newBalance, available_balance: newBalance }).eq('id', account.id);
-      await sb.from('transactions').insert({
-        user_id: userId, account_id: account.id,
-        type: action === 'add' ? 'credit' : 'debit',
-        category: 'admin', description: `Admin: ${reason}`,
-        amount: amount, currency: 'USD',
-        reference: 'ADJ' + Date.now().toString().slice(-8),
-        status: 'completed'
-      });
-      await sb.from('notifications').insert({
-        user_id: userId,
-        title: action === 'add' ? 'Funds Added' : 'Funds Removed',
-        message: `${fmt(amount)} has been ${action === 'add' ? 'added to' : 'removed from'} your account. Reason: ${reason}`,
-        type: 'info'
-      });
-      await logAudit('balance_adjust', `${action} ${fmt(amount)} for ${user.full_name}: ${reason}`);
+      await sb.from('transactions').insert({ user_id: userId, account_id: account.id, type: action === 'add' ? 'credit' : 'debit', category: 'admin', description: `Admin: ${reason}`, amount: amount, currency: 'USD', reference: 'ADJ' + Date.now().toString().slice(-8), status: 'completed' });
       toast('Balance adjusted', 'success');
       closeModal();
       await loadAllData();
@@ -827,101 +310,11 @@ window.openAdjustBalance = (userId) => {
   });
 };
 
-window.openUserDetail = (userId) => {
-  const user = state.users.find(u => u.user_id === userId);
-  const account = state.accounts.find(a => a.user_id === userId);
-  const userTx = state.transactions.filter(t => t.user_id === userId).slice(0, 5);
-  const userCards = state.cards?.filter(c => c.user_id === userId) || [];
-
-  openModal(`
-    <div class="flex items-center justify-between mb-6">
-      <h3 class="font-display text-xl font-bold text-white">User Details</h3>
-      <button onclick="closeModal()" class="p-1 hover:bg-white/10 rounded-lg"><i data-lucide="x" class="w-5 h-5 text-slate-400"></i></button>
-    </div>
-    <div class="flex items-center gap-4 p-4 bg-white/5 rounded-xl border border-white/5 mb-4">
-      <div class="w-14 h-14 gradient-brand rounded-full flex items-center justify-center text-white font-bold text-xl">${(user.full_name || 'U').charAt(0).toUpperCase()}</div>
-      <div class="flex-1">
-        <div class="font-semibold text-white">${user.full_name || 'Unnamed'}</div>
-        <div class="text-sm text-slate-400">${user.email}</div>
-        <div class="text-xs text-slate-500">${user.phone || 'No phone'}</div>
-      </div>
-    </div>
-    <div class="grid grid-cols-2 gap-3 mb-4">
-      <div class="p-3 bg-white/5 rounded-xl border border-white/5"><div class="text-xs text-slate-500 mb-1">Account</div><div class="text-sm font-mono font-semibold text-white">${account?.account_number || '—'}</div></div>
-      <div class="p-3 bg-white/5 rounded-xl border border-white/5"><div class="text-xs text-slate-500 mb-1">Balance</div><div class="text-sm font-display font-bold text-white">${fmt(account?.balance || 0)}</div></div>
-      <div class="p-3 bg-white/5 rounded-xl border border-white/5"><div class="text-xs text-slate-500 mb-1">Transactions</div><div class="text-sm font-semibold text-white">${state.transactions.filter(t => t.user_id === userId).length}</div></div>
-      <div class="p-3 bg-white/5 rounded-xl border border-white/5"><div class="text-xs text-slate-500 mb-1">Member Since</div><div class="text-sm font-semibold text-white">${fmtDate(user.created_at)}</div></div>
-    </div>
-    ${userTx.length > 0 ? `
-      <div class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Recent Transactions</div>
-      <div class="space-y-2">
-        ${userTx.map(tx => `
-          <div class="flex items-center justify-between p-2 bg-white/5 rounded-lg text-sm">
-            <div class="flex items-center gap-2"><i data-lucide="${tx.type === 'credit' ? 'arrow-down-left' : 'arrow-up-right'}" class="w-3 h-3 ${tx.type === 'credit' ? 'text-emerald-400' : 'text-rose-400'}"></i><span class="text-slate-300 truncate max-w-[150px]">${tx.description || 'Transaction'}</span></div>
-            <span class="font-semibold ${tx.type === 'credit' ? 'text-emerald-400' : 'text-white'}">${tx.type === 'credit' ? '+' : '-'}${fmt(tx.amount)}</span>
-          </div>
-        `).join('')}
-      </div>
-    ` : '<p class="text-sm text-slate-500 text-center py-4">No transactions</p>'}
-  `);
-};
-
-window.openSendNotification = (userId) => {
-  const user = state.users.find(u => u.user_id === userId);
-  openModal(`
-    <div class="flex items-center justify-between mb-6">
-      <h3 class="font-display text-xl font-bold text-white">Send Notification</h3>
-      <button onclick="closeModal()" class="p-1 hover:bg-white/10 rounded-lg"><i data-lucide="x" class="w-5 h-5 text-slate-400"></i></button>
-    </div>
-    <div class="p-3 bg-white/5 rounded-xl border border-white/5 mb-4 flex items-center gap-3">
-      <div class="w-8 h-8 gradient-brand rounded-full flex items-center justify-center text-white font-bold text-xs">${(user.full_name || 'U').charAt(0).toUpperCase()}</div>
-      <div><div class="text-sm font-semibold text-white">${user.full_name}</div><div class="text-xs text-slate-400">${user.email}</div></div>
-    </div>
-    <form id="notifForm" class="space-y-4">
-      <div>
-        <label class="block text-xs font-semibold text-slate-300 mb-1.5 tracking-wider">TITLE</label>
-        <input type="text" id="ntTitle" required class="input-field w-full px-4 py-2.5 rounded-xl" placeholder="Notification title">
-      </div>
-      <div>
-        <label class="block text-xs font-semibold text-slate-300 mb-1.5 tracking-wider">MESSAGE</label>
-        <textarea id="ntMessage" required rows="4" class="input-field w-full px-4 py-2.5 rounded-xl resize-none" placeholder="Message..."></textarea>
-      </div>
-      <div>
-        <label class="block text-xs font-semibold text-slate-300 mb-1.5 tracking-wider">TYPE</label>
-        <select id="ntType" class="input-field w-full px-4 py-2.5 rounded-xl">
-          <option value="info">Info</option>
-          <option value="success">Success</option>
-          <option value="warning">Warning</option>
-          <option value="error">Alert</option>
-        </select>
-      </div>
-      <button type="submit" class="btn-primary w-full py-3 rounded-xl">Send Notification</button>
-    </form>
-  `);
-
-  $('#notifForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const { error } = await sb.from('notifications').insert({
-      user_id: userId,
-      title: $('#ntTitle').value,
-      message: $('#ntMessage').value,
-      type: $('#ntType').value
-    });
-    if (error) toast(error.message, 'error');
-    else {
-      await logAudit('notification_sent', `Sent "${$('#ntTitle').value}" to ${user.full_name}`);
-      toast('Notification sent', 'success');
-      closeModal();
-    }
-  });
-};
-
-// ============ ACCOUNTS ============
+// --- ACCOUNTS ---
 function renderAccounts() {
   $('#pageTitle').textContent = 'All Accounts';
   $('#pageSubtitle').textContent = `${state.accounts.length} accounts`;
   const total = state.accounts.reduce((s, a) => s + Number(a.balance || 0), 0);
-
   $('#pageContent').innerHTML = `
     <div class="grid md:grid-cols-3 gap-4 mb-6">
       <div class="glass rounded-2xl p-5"><div class="text-xs text-slate-400 mb-1">Total Accounts</div><div class="font-display text-2xl font-bold text-white">${state.accounts.length}</div></div>
@@ -930,119 +323,64 @@ function renderAccounts() {
     </div>
     <div class="glass rounded-2xl overflow-hidden">
       ${state.accounts.length === 0 ? emptyState('wallet', 'No accounts', 'Accounts will appear after user registration.') : `
-        <div class="overflow-x-auto">
-          <table class="w-full">
-            <thead class="bg-white/5">
-              <tr class="text-left text-xs font-semibold text-slate-400 uppercase tracking-wider">
-                <th class="px-6 py-3">Account Holder</th>
-                <th class="px-6 py-3">Account Number</th>
-                <th class="px-6 py-3">Type</th>
-                <th class="px-6 py-3">Balance</th>
-                <th class="px-6 py-3">Status</th>
-                <th class="px-6 py-3 text-right">Actions</th>
-              </tr>
-            </thead>
-            <tbody class="divide-y divide-white/5">
-              ${state.accounts.map(a => {
-                const user = state.users.find(u => u.user_id === a.user_id);
-                return `
-                  <tr class="hover:bg-white/5 transition">
-                    <td class="px-6 py-4">
-                      <div class="flex items-center gap-3">
-                        <div class="w-9 h-9 gradient-brand rounded-full flex items-center justify-center text-white font-bold text-xs">${(user?.full_name || 'U').charAt(0).toUpperCase()}</div>
-                        <div><div class="font-semibold text-white text-sm">${user?.full_name || 'Unknown'}</div><div class="text-xs text-slate-500">${user?.email || ''}</div></div>
-                      </div>
-                    </td>
-                    <td class="px-6 py-4 text-sm font-mono text-slate-300">${a.account_number}</td>
-                    <td class="px-6 py-4 text-sm text-slate-300 capitalize">${a.account_type}</td>
-                    <td class="px-6 py-4 text-sm font-display font-bold text-white">${fmt(a.balance)}</td>
-                    <td class="px-6 py-4"><span class="px-2 py-1 text-xs font-semibold rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 capitalize">${a.status}</span></td>
-                    <td class="px-6 py-4 text-right">
-                      <button onclick="openAdjustBalance('${a.user_id}')" class="p-2 hover:bg-brand-cyan/10 rounded-lg text-brand-cyan transition"><i data-lucide="wallet" class="w-4 h-4"></i></button>
-                    </td>
-                  </tr>
-                `;
-              }).join('')}
-            </tbody>
-          </table>
-        </div>
+        <div class="overflow-x-auto"><table class="w-full">
+          <thead class="bg-white/5"><tr class="text-left text-xs font-semibold text-slate-400 uppercase tracking-wider"><th class="px-6 py-3">Account Holder</th><th class="px-6 py-3">Account Number</th><th class="px-6 py-3">Type</th><th class="px-6 py-3">Balance</th><th class="px-6 py-3">Status</th></tr></thead>
+          <tbody class="divide-y divide-white/5">
+            ${state.accounts.map(a => {
+              const user = state.users.find(u => u.id === a.user_id);
+              return `<tr class="hover:bg-white/5 transition">
+                <td class="px-6 py-4"><div class="flex items-center gap-3"><div class="w-9 h-9 gradient-brand rounded-full flex items-center justify-center text-white font-bold text-xs">${(user?.full_name || 'U').charAt(0).toUpperCase()}</div><div><div class="font-semibold text-white text-sm">${user?.full_name || 'Unknown'}</div><div class="text-xs text-slate-500">${user?.email || ''}</div></div></div></td>
+                <td class="px-6 py-4 text-sm font-mono text-slate-300">${a.account_number}</td>
+                <td class="px-6 py-4 text-sm text-slate-300 capitalize">${a.account_type}</td>
+                <td class="px-6 py-4 text-sm font-display font-bold text-white">${fmt(a.balance)}</td>
+                <td class="px-6 py-4"><span class="px-2 py-1 text-xs font-semibold rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 capitalize">${a.status}</span></td>
+              </tr>`;
+            }).join('')}
+          </tbody>
+        </table></div>
       `}
     </div>
   `;
   lucide.createIcons();
 }
 
-// ============ TRANSACTIONS ============
+// --- TRANSACTIONS ---
 function renderTransactions() {
   $('#pageTitle').textContent = 'All Transactions';
   $('#pageSubtitle').textContent = `${state.transactions.length} total transactions`;
-
   let search = '', typeFilter = 'all', statusFilter = 'all';
   const render = () => {
     let list = [...state.transactions];
-    if (search) list = list.filter(t => (t.description || '').toLowerCase().includes(search.toLowerCase()) || (t.reference || '').toLowerCase().includes(search.toLowerCase()));
+    if (search) list = list.filter(t => (t.description || '').toLowerCase().includes(search.toLowerCase()));
     if (typeFilter !== 'all') list = list.filter(t => t.type === typeFilter);
     if (statusFilter !== 'all') list = list.filter(t => t.status === statusFilter);
-
     $('#pageContent').innerHTML = `
       <div class="glass rounded-2xl overflow-hidden">
         <div class="p-6 border-b border-white/5 grid md:grid-cols-3 gap-3">
-          <div class="relative md:col-span-2">
-            <i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500"></i>
-            <input id="txSearch" type="text" placeholder="Search..." value="${search}" class="input-field w-full pl-10 pr-4 py-2 rounded-xl text-sm">
-          </div>
+          <div class="relative md:col-span-2"><i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500"></i><input id="txSearch" type="text" placeholder="Search..." value="${search}" class="input-field w-full pl-10 pr-4 py-2 rounded-xl text-sm"></div>
           <div class="flex gap-2">
-            <select id="txType" class="input-field flex-1 px-3 py-2 rounded-xl text-sm">
-              <option value="all" ${typeFilter==='all'?'selected':''}>All Types</option>
-              <option value="credit" ${typeFilter==='credit'?'selected':''}>Credit</option>
-              <option value="debit" ${typeFilter==='debit'?'selected':''}>Debit</option>
-              <option value="transfer" ${typeFilter==='transfer'?'selected':''}>Transfer</option>
-            </select>
-            <select id="txStatus" class="input-field flex-1 px-3 py-2 rounded-xl text-sm">
-              <option value="all" ${statusFilter==='all'?'selected':''}>All Status</option>
-              <option value="completed" ${statusFilter==='completed'?'selected':''}>Completed</option>
-              <option value="pending" ${statusFilter==='pending'?'selected':''}>Pending</option>
-              <option value="failed" ${statusFilter==='failed'?'selected':''}>Failed</option>
-            </select>
+            <select id="txType" class="input-field flex-1 px-3 py-2 rounded-xl text-sm"><option value="all" ${typeFilter==='all'?'selected':''}>All Types</option><option value="credit" ${typeFilter==='credit'?'selected':''}>Credit</option><option value="debit" ${typeFilter==='debit'?'selected':''}>Debit</option></select>
+            <select id="txStatus" class="input-field flex-1 px-3 py-2 rounded-xl text-sm"><option value="all" ${statusFilter==='all'?'selected':''}>All Status</option><option value="completed" ${statusFilter==='completed'?'selected':''}>Completed</option><option value="pending" ${statusFilter==='pending'?'selected':''}>Pending</option></select>
           </div>
         </div>
         ${list.length === 0 ? emptyState('inbox', 'No transactions', 'Transactions will appear as users make them.') : `
-          <div class="overflow-x-auto">
-            <table class="w-full">
-              <thead class="bg-white/5">
-                <tr class="text-left text-xs font-semibold text-slate-400 uppercase tracking-wider">
-                  <th class="px-6 py-3">User</th>
-                  <th class="px-6 py-3">Description</th>
-                  <th class="px-6 py-3">Type</th>
-                  <th class="px-6 py-3">Date</th>
-                  <th class="px-6 py-3">Status</th>
-                  <th class="px-6 py-3 text-right">Amount</th>
-                </tr>
-              </thead>
-              <tbody class="divide-y divide-white/5">
-                ${list.slice(0, 100).map(tx => {
-                  const user = state.users.find(u => u.user_id === tx.user_id);
-                  const isCredit = tx.type === 'credit';
-                  return `
-                    <tr class="hover:bg-white/5 transition">
-                      <td class="px-6 py-4">
-                        <div class="flex items-center gap-2">
-                          <div class="w-8 h-8 gradient-brand rounded-full flex items-center justify-center text-white font-bold text-xs">${(user?.full_name || 'U').charAt(0).toUpperCase()}</div>
-                          <div class="text-sm"><div class="font-semibold text-white">${user?.full_name || 'Unknown'}</div><div class="text-xs text-slate-500">${user?.email || ''}</div></div>
-                        </div>
-                      </td>
-                      <td class="px-6 py-4 text-sm text-slate-300">${tx.description || '—'}</td>
-                      <td class="px-6 py-4"><span class="text-xs font-medium text-slate-400 capitalize">${tx.type}</span></td>
-                      <td class="px-6 py-4 text-xs text-slate-500">${fmtDate(tx.created_at)}</td>
-                      <td class="px-6 py-4"><span class="px-2 py-1 text-xs font-semibold rounded-full ${tx.status === 'completed' ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : tx.status === 'pending' ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20' : 'bg-rose-500/10 text-rose-400 border border-rose-500/20'} capitalize">${tx.status}</span></td>
-                      <td class="px-6 py-4 text-right font-display font-bold text-sm ${isCredit ? 'text-emerald-400' : 'text-white'}">${isCredit ? '+' : '-'}${fmt(tx.amount)}</td>
-                    </tr>
-                  `;
-                }).join('')}
-              </tbody>
-            </table>
-          </div>
-          <div class="p-4 border-t border-white/5 text-xs text-slate-500 text-center">Showing ${Math.min(list.length, 100)} of ${list.length} transactions</div>
+          <div class="overflow-x-auto"><table class="w-full">
+            <thead class="bg-white/5"><tr class="text-left text-xs font-semibold text-slate-400 uppercase tracking-wider"><th class="px-6 py-3">User</th><th class="px-6 py-3">Description</th><th class="px-6 py-3">Type</th><th class="px-6 py-3">Date</th><th class="px-6 py-3">Status</th><th class="px-6 py-3 text-right">Amount</th></tr></thead>
+            <tbody class="divide-y divide-white/5">
+              ${list.slice(0, 100).map(tx => {
+                const user = state.users.find(u => u.id === tx.user_id);
+                const isCredit = tx.type === 'credit';
+                return `<tr class="hover:bg-white/5 transition">
+                  <td class="px-6 py-4"><div class="flex items-center gap-2"><div class="w-8 h-8 gradient-brand rounded-full flex items-center justify-center text-white font-bold text-xs">${(user?.full_name || 'U').charAt(0).toUpperCase()}</div><div class="text-sm"><div class="font-semibold text-white">${user?.full_name || 'Unknown'}</div></div></div></td>
+                  <td class="px-6 py-4 text-sm text-slate-300">${tx.description || '—'}</td>
+                  <td class="px-6 py-4"><span class="text-xs font-medium text-slate-400 capitalize">${tx.type}</span></td>
+                  <td class="px-6 py-4 text-xs text-slate-500">${fmtDate(tx.created_at)}</td>
+                  <td class="px-6 py-4"><span class="px-2 py-1 text-xs font-semibold rounded-full ${tx.status === 'completed' ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 'bg-amber-500/10 text-amber-400 border border-amber-500/20'} capitalize">${tx.status}</span></td>
+                  <td class="px-6 py-4 text-right font-display font-bold text-sm ${isCredit ? 'text-emerald-400' : 'text-white'}">${isCredit ? '+' : '-'}${fmt(tx.amount)}</td>
+                </tr>`;
+              }).join('')}
+            </tbody>
+          </table></div>
         `}
       </div>
     `;
@@ -1054,54 +392,29 @@ function renderTransactions() {
   render();
 }
 
-// ============ PENDING REQUESTS ============
+// --- PENDING ---
 function renderPending() {
   $('#pageTitle').textContent = 'Pending Requests';
   $('#pageSubtitle').textContent = `${state.pendingRequests.length} awaiting review`;
-
   $('#pageContent').innerHTML = `
     <div class="glass rounded-2xl overflow-hidden">
       ${state.pendingRequests.length === 0 ? emptyState('check-circle', 'All caught up!', 'No pending requests at this time.') : `
-        <div class="overflow-x-auto">
-          <table class="w-full">
-            <thead class="bg-white/5">
-              <tr class="text-left text-xs font-semibold text-slate-400 uppercase tracking-wider">
-                <th class="px-6 py-3">User</th>
-                <th class="px-6 py-3">Type</th>
-                <th class="px-6 py-3">Description</th>
-                <th class="px-6 py-3">Amount</th>
-                <th class="px-6 py-3">Date</th>
-                <th class="px-6 py-3 text-right">Actions</th>
-              </tr>
-            </thead>
-            <tbody class="divide-y divide-white/5">
-              ${state.pendingRequests.map(tx => {
-                const user = state.users.find(u => u.user_id === tx.user_id);
-                const account = state.accounts.find(a => a.user_id === tx.user_id);
-                return `
-                  <tr class="hover:bg-white/5 transition">
-                    <td class="px-6 py-4">
-                      <div class="flex items-center gap-2">
-                        <div class="w-8 h-8 gradient-brand rounded-full flex items-center justify-center text-white font-bold text-xs">${(user?.full_name || 'U').charAt(0).toUpperCase()}</div>
-                        <div class="text-sm"><div class="font-semibold text-white">${user?.full_name || 'Unknown'}</div><div class="text-xs text-slate-500">Balance: ${fmt(account?.balance || 0)}</div></div>
-                      </div>
-                    </td>
-                    <td class="px-6 py-4"><span class="px-2 py-1 text-xs font-semibold rounded-full ${tx.type === 'credit' ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 'bg-rose-500/10 text-rose-400 border border-rose-500/20'} capitalize">${tx.type}</span></td>
-                    <td class="px-6 py-4 text-sm text-slate-300">${tx.description || '—'}</td>
-                    <td class="px-6 py-4 font-display font-bold text-white">${fmt(tx.amount)}</td>
-                    <td class="px-6 py-4 text-xs text-slate-500">${fmtRelative(tx.created_at)}</td>
-                    <td class="px-6 py-4">
-                      <div class="flex gap-2 justify-end">
-                        <button onclick="approveTx('${tx.id}')" class="btn-approve px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1"><i data-lucide="check" class="w-3 h-3"></i>Approve</button>
-                        <button onclick="rejectTx('${tx.id}')" class="btn-reject px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1"><i data-lucide="x" class="w-3 h-3"></i>Reject</button>
-                      </div>
-                    </td>
-                  </tr>
-                `;
-              }).join('')}
-            </tbody>
-          </table>
-        </div>
+        <div class="overflow-x-auto"><table class="w-full">
+          <thead class="bg-white/5"><tr class="text-left text-xs font-semibold text-slate-400 uppercase tracking-wider"><th class="px-6 py-3">User</th><th class="px-6 py-3">Type</th><th class="px-6 py-3">Description</th><th class="px-6 py-3">Amount</th><th class="px-6 py-3 text-right">Actions</th></tr></thead>
+          <tbody class="divide-y divide-white/5">
+            ${state.pendingRequests.map(tx => {
+              const user = state.users.find(u => u.id === tx.user_id);
+              const account = state.accounts.find(a => a.user_id === tx.user_id);
+              return `<tr class="hover:bg-white/5 transition">
+                <td class="px-6 py-4"><div class="flex items-center gap-2"><div class="w-8 h-8 gradient-brand rounded-full flex items-center justify-center text-white font-bold text-xs">${(user?.full_name || 'U').charAt(0).toUpperCase()}</div><div class="text-sm"><div class="font-semibold text-white">${user?.full_name || 'Unknown'}</div><div class="text-xs text-slate-500">Bal: ${fmt(account?.balance || 0)}</div></div></div></td>
+                <td class="px-6 py-4"><span class="px-2 py-1 text-xs font-semibold rounded-full ${tx.type === 'credit' ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 'bg-rose-500/10 text-rose-400 border border-rose-500/20'} capitalize">${tx.type}</span></td>
+                <td class="px-6 py-4 text-sm text-slate-300">${tx.description || '—'}</td>
+                <td class="px-6 py-4 font-display font-bold text-white">${fmt(tx.amount)}</td>
+                <td class="px-6 py-4"><div class="flex gap-2 justify-end"><button onclick="approveTx('${tx.id}')" class="btn-approve px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1"><i data-lucide="check" class="w-3 h-3"></i>Approve</button><button onclick="rejectTx('${tx.id}')" class="btn-reject px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1"><i data-lucide="x" class="w-3 h-3"></i>Reject</button></div></td>
+              </tr>`;
+            }).join('')}
+          </tbody>
+        </table></div>
       `}
     </div>
   `;
@@ -1111,92 +424,93 @@ function renderPending() {
 window.approveTx = async (txId) => {
   const tx = state.transactions.find(t => t.id === txId);
   if (!tx) return;
-  const user = state.users.find(u => u.user_id === tx.user_id);
+  const user = state.users.find(u => u.id === tx.user_id);
   const account = state.accounts.find(a => a.user_id === tx.user_id);
   if (!account) { toast('Account not found', 'error'); return; }
-
-  if (tx.type === 'debit' || tx.type === 'transfer') {
-    if (Number(account.balance) < Number(tx.amount)) {
-      toast('Insufficient funds to approve', 'error');
-      return;
-    }
-  }
-
-  if (!confirm(`Approve ${tx.type} of ${fmt(tx.amount)} for ${user?.full_name}?`)) return;
-
+  if ((tx.type === 'debit' || tx.type === 'transfer') && Number(account.balance) < Number(tx.amount)) { toast('Insufficient funds', 'error'); return; }
+  if (!confirm(`Approve ${tx.type} of ${fmt(tx.amount)}?`)) return;
   try {
     let newBalance = Number(account.balance || 0);
-    if (tx.type === 'credit') newBalance += Number(tx.amount);
-    else newBalance -= Number(tx.amount);
-
+    if (tx.type === 'credit') newBalance += Number(tx.amount); else newBalance -= Number(tx.amount);
     await sb.from('accounts').update({ balance: newBalance, available_balance: newBalance }).eq('id', account.id);
     await sb.from('transactions').update({ status: 'completed' }).eq('id', txId);
-    await sb.from('notifications').insert({
-      user_id: tx.user_id,
-      title: 'Transaction Approved',
-      message: `Your ${tx.type} of ${fmt(tx.amount)} has been approved.`,
-      type: 'success'
-    });
-    await logAudit('tx_approved', `Approved ${tx.type} ${fmt(tx.amount)} for ${user?.full_name}`);
     toast('Transaction approved', 'success');
-    await loadAllData();
-    renderPending();
+    await loadAllData(); renderPending();
   } catch (err) { toast(err.message, 'error'); }
 };
 
 window.rejectTx = async (txId) => {
   const tx = state.transactions.find(t => t.id === txId);
   if (!tx) return;
-  const user = state.users.find(u => u.user_id === tx.user_id);
-  if (!confirm(`Reject ${tx.type} of ${fmt(tx.amount)} for ${user?.full_name}?`)) return;
-
+  if (!confirm(`Reject ${tx.type} of ${fmt(tx.amount)}?`)) return;
   try {
     await sb.from('transactions').update({ status: 'failed' }).eq('id', txId);
-    await sb.from('notifications').insert({
-      user_id: tx.user_id,
-      title: 'Transaction Rejected',
-      message: `Your ${tx.type} of ${fmt(tx.amount)} has been rejected.`,
-      type: 'error'
-    });
-    await logAudit('tx_rejected', `Rejected ${tx.type} ${fmt(tx.amount)} for ${user?.full_name}`);
     toast('Transaction rejected', 'warning');
-    await loadAllData();
-    renderPending();
+    await loadAllData(); renderPending();
   } catch (err) { toast(err.message, 'error'); }
 };
 
-// ============ SUPPORT TICKETS ============
+// --- BROADCAST ---
+function renderBroadcast() {
+  $('#pageTitle').textContent = 'Broadcast Notification';
+  $('#pageSubtitle').textContent = 'Send a message to all users';
+  $('#pageContent').innerHTML = `
+    <div class="grid lg:grid-cols-3 gap-6">
+      <div class="lg:col-span-2 glass rounded-2xl p-6">
+        <h3 class="font-display font-bold text-white mb-4">Compose Broadcast</h3>
+        <form id="broadcastForm" class="space-y-4">
+          <div><label class="block text-xs font-semibold text-slate-300 mb-1.5 tracking-wider">TITLE</label><input type="text" id="bcTitle" required class="input-field w-full px-4 py-3 rounded-xl" placeholder="Important announcement"></div>
+          <div><label class="block text-xs font-semibold text-slate-300 mb-1.5 tracking-wider">MESSAGE</label><textarea id="bcMessage" required rows="6" class="input-field w-full px-4 py-3 rounded-xl resize-none" placeholder="Your message to all users..."></textarea></div>
+          <button type="submit" id="bcBtn" class="btn-primary w-full py-3.5 rounded-xl flex items-center justify-center gap-2"><i data-lucide="send" class="w-4 h-4"></i> Send to All Users</button>
+        </form>
+      </div>
+      <div class="glass rounded-2xl p-6 h-fit">
+        <h3 class="font-display font-bold text-white mb-4">Broadcast Stats</h3>
+        <div class="space-y-3">
+          <div class="p-3 bg-white/5 rounded-xl"><div class="text-xs text-slate-400 mb-1">Total Users</div><div class="font-display text-xl font-bold text-white">${state.users.length}</div></div>
+          <div class="p-3 bg-white/5 rounded-xl"><div class="text-xs text-slate-400 mb-1">Active Accounts</div><div class="font-display text-xl font-bold text-white">${state.accounts.filter(a => a.status === 'active').length}</div></div>
+        </div>
+      </div>
+    </div>
+  `;
+  lucide.createIcons();
+  $('#broadcastForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn = $('#bcBtn');
+    btn.disabled = true; btn.innerHTML = '<div class="w-5 h-5 border-2 border-ink-950/30 border-t-ink-950 rounded-full animate-spin"></div>';
+    try {
+      const notifications = state.users.map(u => ({ user_id: u.id, title: $('#bcTitle').value, message: $('#bcMessage').value, type: 'info' }));
+      await sb.from('notifications').insert(notifications);
+      toast(`Broadcast sent to ${state.users.length} users`, 'success');
+      $('#broadcastForm').reset();
+    } catch (err) { toast(err.message, 'error'); }
+    finally { btn.disabled = false; btn.innerHTML = '<i data-lucide="send" class="w-4 h-4"></i> Send to All Users'; lucide.createIcons(); }
+  });
+}
+
+// --- TICKETS ---
 function renderTickets() {
   $('#pageTitle').textContent = 'Support Tickets';
   $('#pageSubtitle').textContent = `${state.tickets.length} total tickets`;
-
   $('#pageContent').innerHTML = `
     <div class="glass rounded-2xl overflow-hidden">
       ${state.tickets.length === 0 ? emptyState('life-buoy', 'No support tickets', 'User support requests will appear here.') : `
         <div class="divide-y divide-white/5">
           ${state.tickets.map(t => {
-            const user = state.users.find(u => u.user_id === t.user_id);
-            return `
-              <div class="p-5 hover:bg-white/5 transition">
-                <div class="flex items-start justify-between gap-4 mb-3">
-                  <div class="flex items-start gap-3 flex-1">
-                    <div class="w-10 h-10 gradient-brand rounded-full flex items-center justify-center text-white font-bold text-sm flex-shrink-0">${(user?.full_name || 'U').charAt(0).toUpperCase()}</div>
-                    <div class="flex-1 min-w-0">
-                      <div class="flex items-center gap-2 mb-1 flex-wrap">
-                        <h4 class="font-semibold text-white">${t.subject}</h4>
-                        <span class="px-2 py-0.5 text-xs font-semibold rounded-full capitalize ${t.status === 'open' ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20' : t.status === 'resolved' ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 'bg-sky-500/10 text-sky-400 border border-sky-500/20'}">${t.status}</span>
-                      </div>
-                      <p class="text-sm text-slate-400 mb-1">${t.message}</p>
-                      <div class="text-xs text-slate-500">${user?.full_name || 'Unknown'} · ${fmtRelative(t.created_at)}</div>
-                    </div>
-                  </div>
-                  <div class="flex gap-2 flex-shrink-0">
-                    ${t.status !== 'resolved' ? `<button onclick="resolveTicket('${t.id}')" class="btn-approve px-3 py-1.5 rounded-lg text-xs font-semibold">Resolve</button>` : ''}
-                    <button onclick="replyTicket('${t.id}')" class="btn-ghost px-3 py-1.5 rounded-lg text-xs font-semibold">Reply</button>
+            const user = state.users.find(u => u.id === t.user_id);
+            return `<div class="p-5 hover:bg-white/5 transition">
+              <div class="flex items-start justify-between gap-4 mb-3">
+                <div class="flex items-start gap-3 flex-1">
+                  <div class="w-10 h-10 gradient-brand rounded-full flex items-center justify-center text-white font-bold text-sm flex-shrink-0">${(user?.full_name || 'U').charAt(0).toUpperCase()}</div>
+                  <div class="flex-1 min-w-0">
+                    <div class="flex items-center gap-2 mb-1 flex-wrap"><h4 class="font-semibold text-white">${t.subject}</h4><span class="px-2 py-0.5 text-xs font-semibold rounded-full capitalize ${t.status === 'open' ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20' : 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'}">${t.status}</span></div>
+                    <p class="text-sm text-slate-400 mb-1">${t.message}</p>
+                    <div class="text-xs text-slate-500">${user?.full_name || 'Unknown'} · ${fmtRelative(t.created_at)}</div>
                   </div>
                 </div>
+                <div class="flex gap-2 flex-shrink-0">${t.status !== 'resolved' ? `<button onclick="resolveTicket('${t.id}')" class="btn-approve px-3 py-1.5 rounded-lg text-xs font-semibold">Resolve</button>` : ''}</div>
               </div>
-            `;
+            </div>`;
           }).join('')}
         </div>
       `}
@@ -1207,191 +521,17 @@ function renderTickets() {
 
 window.resolveTicket = async (id) => {
   await sb.from('support_tickets').update({ status: 'resolved', updated_at: new Date().toISOString() }).eq('id', id);
-  const ticket = state.tickets.find(t => t.id === id);
-  if (ticket) {
-    await sb.from('notifications').insert({
-      user_id: ticket.user_id,
-      title: 'Ticket Resolved',
-      message: `Your support ticket "${ticket.subject}" has been resolved.`,
-      type: 'success'
-    });
-  }
-  await logAudit('ticket_resolved', `Resolved ticket: ${ticket?.subject}`);
   toast('Ticket resolved', 'success');
+  await loadAllData(); renderTickets();
+};
+
+// ==========================================
+// INIT: DIRECT LOAD, NO AUTH
+// ==========================================
+window.addEventListener('DOMContentLoaded', async () => {
   await loadAllData();
-  renderTickets();
-};
-
-window.replyTicket = (id) => {
-  const ticket = state.tickets.find(t => t.id === id);
-  const user = state.users.find(u => u.user_id === ticket.user_id);
-  openModal(`
-    <div class="flex items-center justify-between mb-6">
-      <h3 class="font-display text-xl font-bold text-white">Reply to Ticket</h3>
-      <button onclick="closeModal()" class="p-1 hover:bg-white/10 rounded-lg"><i data-lucide="x" class="w-5 h-5 text-slate-400"></i></button>
-    </div>
-    <div class="p-3 bg-white/5 rounded-xl border border-white/5 mb-4">
-      <div class="text-xs text-slate-400 mb-1">From ${user?.full_name || 'User'}</div>
-      <div class="font-semibold text-white text-sm mb-1">${ticket.subject}</div>
-      <div class="text-sm text-slate-300">${ticket.message}</div>
-    </div>
-    <form id="replyForm" class="space-y-4">
-      <div>
-        <label class="block text-xs font-semibold text-slate-300 mb-1.5 tracking-wider">YOUR REPLY</label>
-        <textarea id="rpMessage" required rows="4" class="input-field w-full px-4 py-2.5 rounded-xl resize-none" placeholder="Type your response..."></textarea>
-      </div>
-      <label class="flex items-center gap-2 cursor-pointer">
-        <input type="checkbox" id="rpResolve" class="w-4 h-4 rounded border-white/20 bg-white/5 text-brand-gold">
-        <span class="text-sm text-slate-300">Mark as resolved after reply</span>
-      </label>
-      <button type="submit" class="btn-primary w-full py-3 rounded-xl">Send Reply</button>
-    </form>
-  `);
-
-  $('#replyForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const resolve = $('#rpResolve').checked;
-    await sb.from('notifications').insert({
-      user_id: ticket.user_id,
-      title: 'Support Reply',
-      message: `Re: ${ticket.subject}\n\n${$('#rpMessage').value}`,
-      type: 'info'
-    });
-    if (resolve) {
-      await sb.from('support_tickets').update({ status: 'resolved', updated_at: new Date().toISOString() }).eq('id', id);
-    }
-    await logAudit('ticket_reply', `Replied to ticket: ${ticket.subject}`);
-    toast('Reply sent', 'success');
-    closeModal();
-    await loadAllData();
-    renderTickets();
-  });
-};
-
-// ============ BROADCAST ============
-function renderBroadcast() {
-  $('#pageTitle').textContent = 'Broadcast Notification';
-  $('#pageSubtitle').textContent = 'Send a message to all users';
-
-  $('#pageContent').innerHTML = `
-    <div class="grid lg:grid-cols-3 gap-6">
-      <div class="lg:col-span-2 glass rounded-2xl p-6">
-        <h3 class="font-display font-bold text-white mb-4">Compose Broadcast</h3>
-        <form id="broadcastForm" class="space-y-4">
-          <div>
-            <label class="block text-xs font-semibold text-slate-300 mb-1.5 tracking-wider">TITLE</label>
-            <input type="text" id="bcTitle" required class="input-field w-full px-4 py-3 rounded-xl" placeholder="Important announcement">
-          </div>
-          <div>
-            <label class="block text-xs font-semibold text-slate-300 mb-1.5 tracking-wider">MESSAGE</label>
-            <textarea id="bcMessage" required rows="6" class="input-field w-full px-4 py-3 rounded-xl resize-none" placeholder="Your message to all users..."></textarea>
-          </div>
-          <div>
-            <label class="block text-xs font-semibold text-slate-300 mb-1.5 tracking-wider">TYPE</label>
-            <select id="bcType" class="input-field w-full px-4 py-3 rounded-xl">
-              <option value="info">Info</option>
-              <option value="success">Success</option>
-              <option value="warning">Warning</option>
-              <option value="error">Alert</option>
-            </select>
-          </div>
-          <div class="p-4 bg-amber-500/10 border border-amber-500/20 rounded-xl flex items-start gap-2">
-            <i data-lucide="alert-triangle" class="w-4 h-4 text-amber-400 flex-shrink-0 mt-0.5"></i>
-            <div class="text-xs text-amber-200">This will send a notification to all <strong>${state.users.length}</strong> registered users.</div>
-          </div>
-          <button type="submit" id="bcBtn" class="btn-primary w-full py-3.5 rounded-xl flex items-center justify-center gap-2">
-            <i data-lucide="send" class="w-4 h-4"></i> Send to All Users
-          </button>
-        </form>
-      </div>
-      <div class="glass rounded-2xl p-6 h-fit">
-        <h3 class="font-display font-bold text-white mb-4">Broadcast Stats</h3>
-        <div class="space-y-3">
-          <div class="p-3 bg-white/5 rounded-xl"><div class="text-xs text-slate-400 mb-1">Total Users</div><div class="font-display text-xl font-bold text-white">${state.users.length}</div></div>
-          <div class="p-3 bg-white/5 rounded-xl"><div class="text-xs text-slate-400 mb-1">Active Accounts</div><div class="font-display text-xl font-bold text-white">${state.accounts.filter(a => a.status === 'active').length}</div></div>
-          <div class="p-3 bg-white/5 rounded-xl"><div class="text-xs text-slate-400 mb-1">Recent Notifications</div><div class="font-display text-xl font-bold text-white">${state.notifications.length}</div></div>
-        </div>
-      </div>
-    </div>
-  `;
-  lucide.createIcons();
-
-  $('#broadcastForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const btn = $('#bcBtn');
-    btn.disabled = true;
-    btn.innerHTML = '<div class="w-5 h-5 border-2 border-ink-950/30 border-t-ink-950 rounded-full animate-spin"></div>';
-
-    const title = $('#bcTitle').value;
-    const message = $('#bcMessage').value;
-    const type = $('#bcType').value;
-
-    try {
-      const notifications = state.users.map(u => ({
-        user_id: u.user_id, title, message, type
-      }));
-      const { error } = await sb.from('notifications').insert(notifications);
-      if (error) throw error;
-      await logAudit('broadcast', `Sent broadcast "${title}" to ${state.users.length} users`);
-      toast(`Broadcast sent to ${state.users.length} users`, 'success');
-      $('#broadcastForm').reset();
-    } catch (err) {
-      toast(err.message, 'error');
-    } finally {
-      btn.disabled = false;
-      btn.innerHTML = '<i data-lucide="send" class="w-4 h-4"></i> Send to All Users';
-      lucide.createIcons();
-    }
-  });
-}
-
-// ============ AUDIT LOG ============
-function renderAudit() {
-  $('#pageTitle').textContent = 'Audit Log';
-  $('#pageSubtitle').textContent = 'Admin activity history';
-
-  $('#pageContent').innerHTML = `
-    <div class="glass rounded-2xl overflow-hidden">
-      <div class="p-6 border-b border-white/5 flex items-center justify-between">
-        <div><h3 class="font-display font-bold text-white">Activity Log</h3><p class="text-xs text-slate-400">Track all admin actions</p></div>
-      </div>
-      <div id="auditContent">
-        <div class="p-12 text-center"><div class="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin mx-auto mb-3"></div><p class="text-sm text-slate-400">Loading audit log...</p></div>
-      </div>
-    </div>
-  `;
-  lucide.createIcons();
-
-  sb.from('audit_logs').select('*').order('created_at', { ascending: false }).limit(100).then(({ data }) => {
-    const logs = data || [];
-    $('#auditContent').innerHTML = logs.length === 0 ? emptyState('scroll-text', 'No audit logs yet', 'Admin actions will be recorded here.') : `
-      <div class="divide-y divide-white/5">
-        ${logs.map(log => {
-          const admin = state.users.find(u => u.user_id === log.user_id);
-          return `
-            <div class="p-4 hover:bg-white/5 transition flex items-start gap-4">
-              <div class="w-10 h-10 gradient-admin rounded-xl flex items-center justify-center flex-shrink-0">
-                <i data-lucide="shield" class="w-5 h-5 text-white"></i>
-              </div>
-              <div class="flex-1 min-w-0">
-                <div class="flex items-center gap-2 mb-1 flex-wrap">
-                  <span class="font-semibold text-white text-sm">${admin?.full_name || 'Admin'}</span>
-                  <span class="px-2 py-0.5 text-xs font-semibold rounded-full bg-brand-gold/10 text-brand-gold border border-brand-gold/20">${log.action}</span>
-                </div>
-                <p class="text-sm text-slate-400">${log.description}</p>
-                <div class="text-xs text-slate-500 mt-1">${fmtDateTime(log.created_at)}</div>
-              </div>
-            </div>
-          `;
-        }).join('')}
-      </div>
-    `;
-    lucide.createIcons();
-  });
-}
-
-// ============ INIT ============
-window.addEventListener('DOMContentLoaded', checkAuth);
+  renderShell('overview');
+});
 </script>
 </body>
 </html>

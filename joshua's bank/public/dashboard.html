@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Skyline Dashboard</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+  :root {
+    --bg: #0f1117; --surface: #1a1d27; --surface2: #232734; --border: #2e3345;
+    --text: #e4e6f0; --text-dim: #8b8fa3; --accent: #6c5ce7; --accent2: #a29bfe;
+    --green: #00cec9; --green-bg: rgba(0, 206, 201, 0.1);
+    --red: #ff6b6b; --red-bg: rgba(255, 107, 107, 0.1);
+    --yellow: #fdcb6e; --yellow-bg: rgba(253, 203, 110, 0.1);
+    --gradient: linear-gradient(135deg, #6c5ce7, #a29bfe, #74b9ff);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+  #loadingScreen { position: fixed; inset: 0; background: var(--bg); z-index: 9999; display: grid; place-items: center; }
+  .spinner { width: 40px; height: 40px; border: 4px solid var(--surface2); border-top-color: var(--accent); border-radius: 50%; animation: spin 1s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .app { max-width: 900px; margin: 0 auto; padding: 24px 20px 60px; display: none; }
+  .header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 32px; }
+  .logo { display: flex; align-items: center; gap: 12px; }
+  .logo-icon { width: 44px; height: 44px; border-radius: 14px; background: var(--gradient); display: grid; place-items: center; font-size: 20px; font-weight: 800; color: #fff; }
+  .logo h1 { font-size: 22px; font-weight: 700; } .logo h1 span { color: var(--accent2); }
+  .avatar { width: 44px; height: 44px; border-radius: 50%; background: var(--gradient); display: grid; place-items: center; font-weight: 700; font-size: 16px; color: #fff; cursor: pointer; border: none; }
+  .welcome-banner { margin-bottom: 24px; }
+  .welcome-banner h2 { font-size: 26px; font-weight: 700; } .welcome-banner p { color: var(--text-dim); font-size: 14px; margin-top: 4px; }
+  .debit-card { background: var(--gradient); border-radius: 20px; padding: 28px; margin-bottom: 32px; color: #fff; }
+  .card-top { display: flex; justify-content: space-between; margin-bottom: 32px; }
+  .card-chip { width: 45px; height: 35px; background: linear-gradient(135deg, #ffd700, #b8860b); border-radius: 6px; }
+  .card-logo { font-size: 18px; font-weight: 800; }
+  .card-number { font-size: 24px; font-weight: 600; letter-spacing: 3px; margin-bottom: 28px; font-family: monospace; }
+  .card-bottom { display: flex; justify-content: space-between; }
+  .card-label { font-size: 10px; opacity: 0.7; text-transform: uppercase; } .card-value { font-size: 15px; font-weight: 600; margin-top: 4px; }
+  .balance-card { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 28px; margin-bottom: 32px; }
+  .balance-label { font-size: 13px; color: var(--text-dim); text-transform: uppercase; margin-bottom: 8px; }
+  .balance-amount { font-size: 42px; font-weight: 800; }
+  .actions { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-bottom: 32px; }
+  .action-card { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 24px; cursor: pointer; transition: all 0.3s; }
+  .action-card:hover { transform: translateY(-4px); border-color: var(--accent); }
+  .action-card .icon { width: 48px; height: 48px; border-radius: 14px; display: grid; place-items: center; font-size: 22px; margin-bottom: 16px; }
+  .action-card h3 { font-size: 16px; font-weight: 600; margin-bottom: 6px; } .action-card p { font-size: 13px; color: var(--text-dim); }
+  .section-header { margin-bottom: 16px; }
+  .section-header h2 { font-size: 20px; font-weight: 700; }
+  .transactions { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; overflow: hidden; }
+  .tx-item { display: flex; align-items: center; gap: 16px; padding: 18px 24px; border-bottom: 1px solid var(--border); }
+  .tx-item:last-child { border-bottom: none; }
+  .tx-icon { width: 44px; height: 44px; border-radius: 14px; display: grid; place-items: center; font-size: 18px; }
+  .tx-icon.deposit, .tx-icon.loan { background: var(--green-bg); } .tx-icon.withdraw { background: var(--red-bg); }
+  .tx-info { flex: 1; } .tx-info .name { font-size: 14px; font-weight: 600; } .tx-info .date { font-size: 12px; color: var(--text-dim); margin-top: 2px; }
+  .tx-amount { font-size: 15px; font-weight: 700; } .tx-amount.deposit, .tx-amount.loan { color: var(--green); } .tx-amount.withdraw { color: var(--red); }
+  .status-pending { color: var(--yellow); font-size: 12px; font-weight: 600; background: var(--yellow-bg); padding: 2px 8px; border-radius: 6px; }
+  .status-approved { color: var(--green); font-size: 12px; font-weight: 700; background: var(--green-bg); padding: 2px 8px; border-radius: 6px; }
+  .status-failed { color: var(--red); font-size: 12px; font-weight: 700; background: var(--red-bg); padding: 2px 8px; border-radius: 6px; }
+  .empty-state { padding: 48px 24px; text-align: center; color: var(--text-dim); }
+  .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); z-index: 100; display: none; place-items: center; }
+  .modal-overlay.active { display: grid; }
+  .modal { background: var(--surface); border: 1px solid var(--border); border-radius: 24px; padding: 36px; width: 90%; max-width: 420px; }
+  .modal h2 { font-size: 22px; font-weight: 700; margin-bottom: 6px; } .modal .subtitle { font-size: 13px; color: var(--text-dim); margin-bottom: 28px; }
+  .modal label { font-size: 13px; font-weight: 500; color: var(--text-dim); display: block; margin-bottom: 8px; }
+  .modal input { width: 100%; padding: 16px 18px; border-radius: 14px; border: 1px solid var(--border); background: var(--surface2); color: var(--text); font-size: 20px; font-weight: 600; outline: none; margin-bottom: 8px; }
+  .quick-amounts { display: flex; gap: 8px; margin-bottom: 24px; flex-wrap: wrap; }
+  .quick-btn { padding: 8px 16px; border-radius: 10px; border: 1px solid var(--border); background: var(--surface2); color: var(--text-dim); font-size: 13px; cursor: pointer; }
+  .modal-actions { display: flex; gap: 12px; }
+  .btn { flex: 1; padding: 16px; border-radius: 14px; border: none; font-size: 15px; font-weight: 600; cursor: pointer; }
+  .btn-primary { background: var(--gradient); color: #fff; }
+  .btn-secondary { background: var(--surface2); color: var(--text-dim); border: 1px solid var(--border); }
+  .error-msg { color: var(--red); font-size: 12px; min-height: 18px; margin-bottom: 8px; }
+  .toast { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%) translateY(100px); background: var(--surface); border: 1px solid var(--border); padding: 14px 28px; border-radius: 14px; z-index: 200; transition: transform 0.4s ease; }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+  @media (max-width: 600px) { .balance-amount { font-size: 32px; } .actions { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<div id="loadingScreen"><div class="spinner"></div></div>
+<div class="app" id="mainApp">
+  <header class="header">
+    <div class="logo"><div class="logo-icon">S</div><h1>Sky<span>line</span></h1></div>
+    <button class="avatar" id="userAvatar" onclick="doLogout()">U</button>
+  </header>
+  <div class="welcome-banner"><h2 id="welcomeName">Welcome back, User</h2><p id="welcomeEmail">user@example.com</p></div>
+  <div class="debit-card">
+    <div class="card-top"><div class="card-chip"></div><div class="card-logo">VISA</div></div>
+    <div class="card-number" id="cardNumber">**** **** **** 0000</div>
+    <div class="card-bottom">
+      <div><div class="card-label">Card Holder</div><div class="card-value" id="cardName">USER NAME</div></div>
+      <div><div class="card-label">Expires</div><div class="card-value">12/28</div></div>
+    </div>
+  </div>
+  <div class="balance-card"><div class="balance-label">Available Balance</div><div class="balance-amount" id="balanceDisplay">$0.00</div></div>
+  <div class="actions">
+    <div class="action-card" onclick="openModal('deposit')"><div class="icon" style="background: var(--green-bg);">💰</div><h3>Add Balance</h3><p>Request a deposit</p></div>
+    <div class="action-card" onclick="openModal('withdraw')"><div class="icon" style="background: var(--red-bg);">💸</div><h3>Withdraw</h3><p>Request withdrawal</p></div>
+    <div class="action-card" onclick="openModal('loan')"><div class="icon" style="background: rgba(108,92,231,0.1);">🏦</div><h3>Request Loan</h3><p>Apply for loan</p></div>
+  </div>
+  <div class="section-header"><h2>Recent Requests</h2></div>
+  <div class="transactions" id="txList"><div class="empty-state"><p>No requests yet.</p></div></div>
+</div>
+
+<div class="modal-overlay" id="depositModal">
+  <div class="modal">
+    <h2>💰 Add Balance</h2><p class="subtitle">Enter amount to deposit</p>
+    <label>Amount (USD)</label><input type="number" id="depositInput" placeholder="0.00" min="0.01">
+    <div class="error-msg" id="depositError"></div>
+    <div class="quick-amounts">
+      <button class="quick-btn" onclick="setAmount('deposit', 100)">$100</button>
+      <button class="quick-btn" onclick="setAmount('deposit', 500)">$500</button>
+      <button class="quick-btn" onclick="setAmount('deposit', 1000)">$1,000</button>
+    </div>
+    <div class="modal-actions"><button class="btn btn-secondary" onclick="closeModal('deposit')">Cancel</button><button class="btn btn-primary" onclick="processAction('deposit')">Submit</button></div>
+  </div>
+</div>
+<div class="modal-overlay" id="withdrawModal">
+  <div class="modal">
+    <h2>💸 Withdraw</h2><p class="subtitle">Enter amount to withdraw</p>
+    <label>Amount (USD)</label><input type="number" id="withdrawInput" placeholder="0.00" min="0.01">
+    <div class="error-msg" id="withdrawError"></div>
+    <div class="quick-amounts">
+      <button class="quick-btn" onclick="setAmount('withdraw', 50)">$50</button>
+      <button class="quick-btn" onclick="setAmount('withdraw', 200)">$200</button>
+      <button class="quick-btn" onclick="setAmount('withdraw', 500)">$500</button>
+    </div>
+    <div class="modal-actions"><button class="btn btn-secondary" onclick="closeModal('withdraw')">Cancel</button><button class="btn btn-primary" onclick="processAction('withdraw')">Submit</button></div>
+  </div>
+</div>
+<div class="modal-overlay" id="loanModal">
+  <div class="modal">
+    <h2>🏦 Request Loan</h2><p class="subtitle">Enter loan amount</p>
+    <label>Amount (USD)</label><input type="number" id="loanInput" placeholder="0.00" min="0.01">
+    <div class="error-msg" id="loanError"></div>
+    <div class="quick-amounts">
+      <button class="quick-btn" onclick="setAmount('loan', 1000)">$1,000</button>
+      <button class="quick-btn" onclick="setAmount('loan', 5000)">$5,000</button>
+      <button class="quick-btn" onclick="setAmount('loan', 10000)">$10,000</button>
+    </div>
+    <div class="modal-actions"><button class="btn btn-secondary" onclick="closeModal('loan')">Cancel</button><button class="btn btn-primary" onclick="processAction('loan')">Submit</button></div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+  // ⚠️ REPLACE WITH YOUR SUPABASE CREDENTIALS
+  const SUPABASE_URL = 'YOUR_SUPABASE_URL';
+  const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
+  const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  
+  let currentUser = null;
+  const fmt = (n) => '$' + Number(n).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+  async function initDashboard() {
+    const { data: { session } } = await sb.auth.getSession();
+    if (!session) { window.location.href = 'index.html'; return; }
+
+    const { data: profile, error } = await sb.from('profiles').select('*').eq('id', session.user.id).single();
+    if (error || !profile) {
+      document.getElementById('loadingScreen').innerHTML = `<div style="text-align:center;"><h2 style="color:var(--red);">Profile Error</h2><p style="color:var(--text-dim);margin:16px 0;">${error?.message || 'Profile not found'}</p><button class="btn btn-primary" onclick="window.location.href='index.html'">Return to Login</button></div>`;
+      return;
+    }
+
+    currentUser = profile;
+    renderUI();
+    loadRequests();
+    document.getElementById('loadingScreen').style.display = 'none';
+    document.getElementById('mainApp').style.display = 'block';
+  }
+
+  function renderUI() {
+    document.getElementById('welcomeName').textContent = `Welcome back, ${currentUser.full_name || currentUser.email.split('@')[0]}`;
+    document.getElementById('welcomeEmail').textContent = currentUser.email;
+    document.getElementById('userAvatar').textContent = (currentUser.full_name || 'U').charAt(0).toUpperCase();
+    document.getElementById('cardNumber').textContent = `**** **** **** ${currentUser.account_number}`;
+    document.getElementById('cardName').textContent = (currentUser.full_name || 'USER').toUpperCase();
+    document.getElementById('balanceDisplay').textContent = fmt(currentUser.balance);
+  }
+
+  async function loadRequests() {
+    const { data } = await sb.from('requests').select('*').eq('user_id', currentUser.id).order('created_at', { ascending: false });
+    const list = document.getElementById('txList');
+    if (!data || data.length === 0) { list.innerHTML = `<div class="empty-state"><p>No requests yet.</p></div>`; return; }
+    list.innerHTML = data.map(tx => {
+      const colorClass = (tx.type === 'deposit' || tx.type === 'loan') ? (tx.type === 'loan' ? 'loan' : 'deposit') : 'withdraw';
+      const sign = (tx.type === 'deposit' || tx.type === 'loan') ? '+' : '-';
+      const statusBadge = tx.status === 'pending' ? '<span class="status-pending">Pending</span>' : tx.status === 'approved' ? '<span class="status-approved">✓ Approved</span>' : '<span class="status-failed">✕ Failed</span>';
+      return `<div class="tx-item"><div class="tx-icon ${colorClass}">${tx.type === 'deposit' || tx.type === 'loan' ? '↓' : '↑'}</div><div class="tx-info"><div class="name">${tx.type.charAt(0).toUpperCase() + tx.type.slice(1)} ${statusBadge}</div><div class="date">${new Date(tx.created_at).toLocaleString()}</div></div><div class="tx-amount ${colorClass}">${sign}${fmt(tx.amount)}</div></div>`;
+    }).join('');
+  }
+
+  async function doLogout() {
+    if (!confirm('Logout?')) return;
+    await sb.auth.signOut();
+    window.location.href = 'index.html';
+  }
+
+  function openModal(type) {
+    document.getElementById(type + 'Modal').classList.add('active');
+    document.getElementById(type + 'Input').value = '';
+    document.getElementById(type + 'Error').textContent = '';
+  }
+  function closeModal(type) { document.getElementById(type + 'Modal').classList.remove('active'); }
+  function setAmount(type, val) { document.getElementById(type + 'Input').value = val; }
+
+  async function processAction(type) {
+    const amount = parseFloat(document.getElementById(type + 'Input').value);
+    const err = document.getElementById(type + 'Error');
+    if (!amount || amount <= 0) { err.textContent = 'Enter valid amount'; return; }
+    if (type === 'withdraw' && amount > currentUser.balance) { err.textContent = 'Insufficient funds'; return; }
+
+    const { error } = await sb.from('requests').insert({ user_id: currentUser.id, type, amount, status: 'pending' });
+    if (error) { err.textContent = error.message; }
+    else {
+      closeModal(type);
+      showToast(`${type} request submitted`, 'green');
+      loadRequests();
+    }
+  }
+
+  function showToast(msg) {
+    const toast = document.getElementById('toast');
+    toast.textContent = msg;
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 3000);
+  }
+
+  document.querySelectorAll('.modal-overlay').forEach(m => m.addEventListener('click', (e) => { if (e.target === m) m.classList.remove('active'); }));
+  initDashboard();
+</script>
+</body>
+</html>

@@ -1,0 +1,2142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Skyline Capital — Banking Beyond Boundaries</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        fontFamily: {
+          sans: ['Inter', 'system-ui', 'sans-serif'],
+          display: ['Space Grotesk', 'Inter', 'sans-serif']
+        },
+        colors: {
+          ink: {
+            950: '#050B1F',
+            900: '#0A1128',
+            800: '#0F1A3A',
+            700: '#1A2650',
+            600: '#2A3A6B'
+          },
+          brand: {
+            cyan: '#22D3EE',
+            blue: '#3B82F6',
+            indigo: '#6366F1',
+            gold: '#F4C430'
+          }
+        },
+        boxShadow: {
+          'glow': '0 0 60px -10px rgba(34, 211, 238, 0.4)',
+          'soft': '0 4px 30px -4px rgba(10, 17, 40, 0.15)',
+          'card': '0 10px 40px -10px rgba(10, 17, 40, 0.25)'
+        }
+      }
+    }
+  }
+</script>
+<style>
+  * { font-family: 'Inter', system-ui, sans-serif; }
+  body { background: #050B1F; color: #E2E8F0; overflow-x: hidden; }
+  .font-display { font-family: 'Space Grotesk', 'Inter', sans-serif; }
+
+  /* Glassmorphism */
+  .glass {
+    background: rgba(255, 255, 255, 0.06);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  .glass-strong {
+    background: rgba(10, 17, 40, 0.75);
+    backdrop-filter: blur(30px);
+    -webkit-backdrop-filter: blur(30px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+  }
+  .glass-light {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(226, 232, 240, 0.5);
+  }
+
+  /* Gradients */
+  .gradient-brand { background: linear-gradient(135deg, #22D3EE 0%, #3B82F6 50%, #6366F1 100%); }
+  .gradient-ink { background: linear-gradient(180deg, #0A1128 0%, #050B1F 100%); }
+  .gradient-card { background: linear-gradient(135deg, #1A2650 0%, #0F1A3A 100%); }
+  .gradient-text {
+    background: linear-gradient(135deg, #22D3EE 0%, #3B82F6 50%, #6366F1 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  /* Animations */
+  .fade-in { animation: fadeIn 0.5s ease-out; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+  .slide-up { animation: slideUp 0.4s ease-out; }
+  @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+  .slide-in-right { animation: slideInRight 0.35s cubic-bezier(0.16, 1, 0.3, 1); }
+  @keyframes slideInRight { from { transform: translateX(120%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+  .scale-in { animation: scaleIn 0.3s ease-out; }
+  @keyframes scaleIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+  .pulse-glow { animation: pulseGlow 3s ease-in-out infinite; }
+  @keyframes pulseGlow { 0%, 100% { box-shadow: 0 0 40px -10px rgba(34, 211, 238, 0.4); } 50% { box-shadow: 0 0 60px -5px rgba(34, 211, 238, 0.6); } }
+
+  /* Skeleton */
+  .skeleton {
+    background: linear-gradient(90deg, rgba(255,255,255,0.04) 25%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.04) 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+    border-radius: 8px;
+  }
+  @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 8px; height: 8px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 4px; }
+  ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
+
+  /* Input */
+  .input-field {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #E2E8F0;
+    transition: all 0.2s;
+  }
+  .input-field:focus {
+    outline: none;
+    border-color: #22D3EE;
+    background: rgba(255, 255, 255, 0.06);
+    box-shadow: 0 0 0 3px rgba(34, 211, 238, 0.15);
+  }
+  .input-field::placeholder { color: rgba(148, 163, 184, 0.6); }
+
+  /* Nav */
+  .nav-item { transition: all 0.2s; position: relative; }
+  .nav-item:hover { background: rgba(34, 211, 238, 0.08); color: #22D3EE; }
+  .nav-item.active {
+    background: linear-gradient(90deg, rgba(34, 211, 238, 0.15), transparent);
+    color: #22D3EE;
+  }
+  .nav-item.active::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 8px;
+    bottom: 8px;
+    width: 3px;
+    background: linear-gradient(180deg, #22D3EE, #3B82F6);
+    border-radius: 0 3px 3px 0;
+  }
+
+  /* Buttons */
+  .btn-primary {
+    background: linear-gradient(135deg, #22D3EE 0%, #3B82F6 100%);
+    color: white;
+    transition: all 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+  .btn-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 10px 30px -5px rgba(34, 211, 238, 0.4);
+  }
+  .btn-primary:active { transform: translateY(0); }
+  .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+
+  .btn-ghost {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #E2E8F0;
+    transition: all 0.2s;
+  }
+  .btn-ghost:hover { background: rgba(255, 255, 255, 0.1); border-color: rgba(34, 211, 238, 0.3); }
+
+  /* Card shine */
+  .card-shine { position: relative; overflow: hidden; }
+  .card-shine::before {
+    content: '';
+    position: absolute;
+    top: -50%; left: -50%;
+    width: 200%; height: 200%;
+    background: linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.08) 50%, transparent 70%);
+    animation: shine 8s infinite;
+  }
+  @keyframes shine { 0% { transform: translateX(-100%) translateY(-100%); } 100% { transform: translateX(100%) translateY(100%); } }
+
+  /* Hero image */
+  .hero-image {
+    background-image: url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=1200&q=80');
+    background-size: cover;
+    background-position: center;
+    position: relative;
+  }
+  .hero-image::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(5,11,31,0.7) 0%, rgba(10,17,40,0.4) 50%, rgba(5,11,31,0.8) 100%);
+  }
+
+  /* Mobile sidebar */
+  @media (max-width: 1023px) {
+    .sidebar-desktop { transform: translateX(-100%); transition: transform 0.3s; position: fixed; z-index: 50; }
+    .sidebar-desktop.open { transform: translateX(0); }
+  }
+
+  /* Toast */
+  .toast-enter { animation: slideInRight 0.35s cubic-bezier(0.16, 1, 0.3, 1); }
+
+  /* Hide scrollbar on mobile nav */
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+  /* Floating orbs */
+  .orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.4;
+    pointer-events: none;
+  }
+</style>
+</head>
+<body>
+
+<!-- Toast Container -->
+<div id="toastContainer" class="fixed top-4 right-4 z-[9999] space-y-2 pointer-events-none"></div>
+
+<!-- Modal Container -->
+<div id="modalContainer" class="fixed inset-0 z-[9998] hidden bg-black/70 backdrop-blur-sm items-center justify-center p-4">
+  <div id="modalContent" class="glass-strong rounded-3xl shadow-2xl max-w-lg w-full p-6 scale-in pointer-events-auto max-h-[90vh] overflow-y-auto"></div>
+</div>
+
+<!-- App Root -->
+<div id="app"></div>
+
+<script>
+// ============================================
+// ⚠️ REPLACE THESE WITH YOUR SUPABASE CREDENTIALS
+// ============================================
+const SUPABASE_URL = 'https://amxoyqmuhmzlfabginjg.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFteG95cW11aG16bGZhYmdpbmpnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODgwNDEyOTMsImV4cCI6MjEwMzYxNzI5M30.UQIj0a7IbIIX8idr_zboWHRTcRK9izVpOLkY6i7aAeI';
+
+let sb = null;
+try {
+  sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+} catch (e) {
+  console.error('Supabase init failed:', e);
+}
+
+// ============ STATE ============
+const state = {
+  user: null,
+  profile: null,
+  accounts: [],
+  transactions: [],
+  cards: [],
+  beneficiaries: [],
+  notifications: [],
+  tickets: [],
+  loading: false,
+  charts: {},
+  currentRoute: '/'
+};
+
+// ============ UTILITIES ============
+const $ = (s) => document.querySelector(s);
+const $$ = (s) => document.querySelectorAll(s);
+const fmt = (n) => '$' + Number(n || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+const fmtDate = (d) => d ? new Date(d).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '—';
+const fmtDateTime = (d) => d ? new Date(d).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : '—';
+const fmtRelative = (d) => {
+  if (!d) return '';
+  const diff = (Date.now() - new Date(d)) / 1000;
+  if (diff < 60) return 'just now';
+  if (diff < 3600) return Math.floor(diff / 60) + 'm ago';
+  if (diff < 86400) return Math.floor(diff / 3600) + 'h ago';
+  if (diff < 604800) return Math.floor(diff / 86400) + 'd ago';
+  return fmtDate(d);
+};
+const maskAccount = (n) => n ? '•••• •••• •••• ' + String(n).slice(-4) : '•••• •••• •••• ••••';
+
+// ============ TOAST ============
+function toast(message, type = 'info') {
+  const colors = {
+    success: 'from-emerald-500 to-teal-500',
+    error: 'from-rose-500 to-red-500',
+    info: 'from-sky-500 to-blue-500',
+    warning: 'from-amber-500 to-orange-500'
+  };
+  const icons = { success: 'check-circle-2', error: 'x-circle', info: 'info', warning: 'alert-triangle' };
+  const el = document.createElement('div');
+  el.className = `toast-enter pointer-events-auto flex items-center gap-3 px-5 py-3.5 rounded-2xl shadow-2xl text-white bg-gradient-to-r ${colors[type]} min-w-[280px] max-w-md border border-white/10`;
+  el.innerHTML = `
+    <i data-lucide="${icons[type]}" class="w-5 h-5 flex-shrink-0"></i>
+    <span class="text-sm font-medium flex-1">${message}</span>
+    <button onclick="this.parentElement.remove()" class="opacity-60 hover:opacity-100"><i data-lucide="x" class="w-4 h-4"></i></button>
+  `;
+  $('#toastContainer').appendChild(el);
+  lucide.createIcons();
+  setTimeout(() => {
+    el.style.transition = 'all 0.3s';
+    el.style.opacity = '0';
+    el.style.transform = 'translateX(120%)';
+    setTimeout(() => el.remove(), 300);
+  }, 4000);
+}
+
+// ============ MODAL ============
+function openModal(html) {
+  $('#modalContent').innerHTML = html;
+  $('#modalContainer').classList.remove('hidden');
+  $('#modalContainer').classList.add('flex');
+  lucide.createIcons();
+}
+function closeModal() {
+  $('#modalContainer').classList.add('hidden');
+  $('#modalContainer').classList.remove('flex');
+}
+$('#modalContainer').addEventListener('click', (e) => {
+  if (e.target.id === 'modalContainer') closeModal();
+});
+
+// ============ EMPTY STATES ============
+const emptyState = (icon, title, subtitle) => `
+  <div class="flex flex-col items-center justify-center py-16 px-6 text-center fade-in">
+    <div class="w-20 h-20 rounded-2xl bg-gradient-to-br from-ink-700 to-ink-800 flex items-center justify-center mb-5 border border-white/5">
+      <i data-lucide="${icon}" class="w-9 h-9 text-slate-500"></i>
+    </div>
+    <h3 class="text-lg font-semibold text-slate-200 mb-2">${title}</h3>
+    <p class="text-sm text-slate-500 max-w-sm">${subtitle}</p>
+  </div>
+`;
+
+const skeleton = (cls = '') => `<div class="skeleton ${cls}"></div>`;
+
+// ============ ROUTER ============
+const routes = {
+  '': 'landing', '/': 'landing',
+  '/login': 'login', '/signup': 'signup',
+  '/forgot-password': 'forgot', '/reset-password': 'reset',
+  '/dashboard': 'dashboard', '/accounts': 'accounts',
+  '/transactions': 'transactions', '/cards': 'cards',
+  '/transfers': 'transfers', '/payments': 'payments',
+  '/beneficiaries': 'beneficiaries', '/statements': 'statements',
+  '/notifications': 'notifications', '/profile': 'profile',
+  '/security': 'security', '/support': 'support'
+};
+const protectedRoutes = ['dashboard','accounts','transactions','cards','transfers','payments','beneficiaries','statements','notifications','profile','security','support'];
+const authRoutes = ['login','signup','forgot','reset'];
+
+function navigate(path) { window.location.hash = path; }
+function getRoute() { return routes[window.location.hash.slice(1) || '/'] || 'landing'; }
+
+async function router() {
+  if (!sb || SUPABASE_URL === 'YOUR_SUPABASE_URL') {
+    renderSetupScreen();
+    return;
+  }
+  const route = getRoute();
+  state.currentRoute = route;
+
+  const { data: { session } } = await sb.auth.getSession();
+  state.user = session?.user || null;
+
+  if (protectedRoutes.includes(route) && !state.user) {
+    toast('Please sign in to continue', 'info');
+    navigate('/login');
+    return;
+  }
+  if (authRoutes.includes(route) && state.user) { navigate('/dashboard'); return; }
+  if (route === 'landing' && state.user) { navigate('/dashboard'); return; }
+
+  if (protectedRoutes.includes(route) && state.user) {
+    await loadUserData();
+  }
+
+  render(route);
+}
+
+window.addEventListener('hashchange', router);
+
+// ============ DATA LOADING ============
+async function loadUserData() {
+  if (!state.user) return;
+  const uid = state.user.id;
+  const [p, a, t, c, b, n, s] = await Promise.all([
+    sb.from('profiles').select('*').eq('user_id', uid).maybeSingle(),
+    sb.from('accounts').select('*').eq('user_id', uid),
+    sb.from('transactions').select('*').eq('user_id', uid).order('created_at', { ascending: false }).limit(100),
+    sb.from('cards').select('*').eq('user_id', uid),
+    sb.from('beneficiaries').select('*').eq('user_id', uid).order('created_at', { ascending: false }),
+    sb.from('notifications').select('*').eq('user_id', uid).order('created_at', { ascending: false }).limit(50),
+    sb.from('support_tickets').select('*').eq('user_id', uid).order('created_at', { ascending: false })
+  ]);
+  state.profile = p.data;
+  state.accounts = a.data || [];
+  state.transactions = t.data || [];
+  state.cards = c.data || [];
+  state.beneficiaries = b.data || [];
+  state.notifications = n.data || [];
+  state.tickets = s.data || [];
+}
+
+// ============ RENDER DISPATCHER ============
+function render(route) {
+  const app = $('#app');
+  const renderers = {
+    landing: renderLanding,
+    login: renderLogin,
+    signup: renderSignup,
+    forgot: renderForgot,
+    reset: renderReset,
+    dashboard: () => renderShell(renderDashboard),
+    accounts: () => renderShell(renderAccounts),
+    transactions: () => renderShell(renderTransactions),
+    cards: () => renderShell(renderCards),
+    transfers: () => renderShell(renderTransfers),
+    payments: () => renderShell(renderPayments),
+    beneficiaries: () => renderShell(renderBeneficiaries),
+    statements: () => renderShell(renderStatements),
+    notifications: () => renderShell(renderNotifications),
+    profile: () => renderShell(renderProfile),
+    security: () => renderShell(renderSecurity),
+    support: () => renderShell(renderSupport)
+  };
+  (renderers[route] || renderLanding)();
+  lucide.createIcons();
+}
+
+// ============ SETUP SCREEN (when no credentials) ============
+function renderSetupScreen() {
+  $('#app').innerHTML = `
+    <div class="min-h-screen flex items-center justify-center p-6 gradient-ink relative overflow-hidden">
+      <div class="orb w-96 h-96 bg-brand-cyan top-0 -left-20"></div>
+      <div class="orb w-96 h-96 bg-brand-indigo bottom-0 -right-20"></div>
+      <div class="glass-strong rounded-3xl p-10 max-w-md w-full text-center relative z-10 fade-in">
+        <div class="w-16 h-16 gradient-brand rounded-2xl flex items-center justify-center mx-auto mb-6 pulse-glow">
+          <i data-lucide="landmark" class="w-8 h-8 text-white"></i>
+        </div>
+        <h1 class="text-2xl font-bold text-white mb-2 font-display">Configuration Required</h1>
+        <p class="text-slate-400 text-sm mb-6">Connect Skyline Capital to your Supabase project.</p>
+        <div class="text-left space-y-3 text-sm">
+          <div class="p-3 rounded-xl bg-ink-800 border border-white/5">
+            <div class="text-slate-400 text-xs mb-1">Step 1</div>
+            <div class="text-slate-200">Open <code class="text-brand-cyan">index.html</code> in a code editor</div>
+          </div>
+          <div class="p-3 rounded-xl bg-ink-800 border border-white/5">
+            <div class="text-slate-400 text-xs mb-1">Step 2</div>
+            <div class="text-slate-200">Replace <code class="text-brand-cyan">YOUR_SUPABASE_URL</code> and <code class="text-brand-cyan">YOUR_SUPABASE_ANON_KEY</code></div>
+          </div>
+          <div class="p-3 rounded-xl bg-ink-800 border border-white/5">
+            <div class="text-slate-400 text-xs mb-1">Step 3</div>
+            <div class="text-slate-200">Run the SQL schema in Supabase SQL Editor</div>
+          </div>
+          <div class="p-3 rounded-xl bg-ink-800 border border-white/5">
+            <div class="text-slate-400 text-xs mb-1">Step 4</div>
+            <div class="text-slate-200">Refresh this page</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+  lucide.createIcons();
+}
+
+// ============ LANDING PAGE ============
+function renderLanding() {
+  $('#app').innerHTML = `
+    <div class="min-h-screen gradient-ink relative overflow-hidden">
+      <!-- Orbs -->
+      <div class="orb w-[500px] h-[500px] bg-brand-cyan -top-40 -left-40"></div>
+      <div class="orb w-[600px] h-[600px] bg-brand-indigo top-1/3 -right-40"></div>
+      <div class="orb w-[400px] h-[400px] bg-brand-blue bottom-0 left-1/3"></div>
+
+      <!-- Nav -->
+      <nav class="relative z-20 px-6 py-5">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
+          <a href="#/" class="flex items-center gap-3">
+            <div class="w-10 h-10 gradient-brand rounded-xl flex items-center justify-center pulse-glow">
+              <i data-lucide="landmark" class="w-5 h-5 text-white"></i>
+            </div>
+            <div>
+              <div class="font-display font-bold text-white text-lg leading-none">SKYLINE</div>
+              <div class="text-[10px] tracking-[0.3em] text-brand-cyan font-semibold">CAPITAL</div>
+            </div>
+          </a>
+          <div class="hidden md:flex items-center gap-8 text-sm text-slate-300">
+            <a href="#features" class="hover:text-white transition">Features</a>
+            <a href="#insights" class="hover:text-white transition">Insights</a>
+            <a href="#security" class="hover:text-white transition">Security</a>
+            <a href="#contact" class="hover:text-white transition">Contact</a>
+          </div>
+          <div class="flex items-center gap-3">
+            <a href="#/login" class="text-sm text-slate-200 hover:text-white px-4 py-2 transition">Sign In</a>
+            <a href="#/signup" class="btn-primary text-sm font-semibold px-5 py-2.5 rounded-xl">Get Started</a>
+          </div>
+        </div>
+      </nav>
+
+      <!-- HERO -->
+      <section class="relative z-10 px-6 pt-12 pb-24">
+        <div class="max-w-7xl mx-auto grid lg:grid-cols-2 gap-12 items-center">
+          <!-- LEFT: Image -->
+          <div class="relative fade-in order-2 lg:order-1">
+            <div class="hero-image rounded-3xl h-[500px] lg:h-[600px] shadow-glow relative overflow-hidden">
+              <div class="absolute inset-0 z-10 flex items-end p-8">
+                <div class="glass rounded-2xl p-5 max-w-xs">
+                  <div class="flex items-center gap-2 mb-2">
+                    <div class="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></div>
+                    <span class="text-xs text-emerald-300 font-semibold">LIVE</span>
+                  </div>
+                  <div class="text-xs text-slate-300 mb-1">Global Markets</div>
+                  <div class="text-2xl font-bold text-white font-display">+2.34%</div>
+                </div>
+              </div>
+            </div>
+            <!-- Floating card -->
+            <div class="absolute -bottom-6 -right-6 glass-strong rounded-2xl p-5 shadow-2xl hidden md:block fade-in">
+              <div class="flex items-center gap-3">
+                <div class="w-12 h-12 gradient-brand rounded-xl flex items-center justify-center">
+                  <i data-lucide="shield-check" class="w-6 h-6 text-white"></i>
+                </div>
+                <div>
+                  <div class="text-xs text-slate-400">FDIC Insured</div>
+                  <div class="font-bold text-white">Up to $250,000</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- RIGHT: Auth Card -->
+          <div class="order-1 lg:order-2 fade-in">
+            <div class="inline-flex items-center gap-2 glass rounded-full px-4 py-2 mb-6">
+              <i data-lucide="sparkles" class="w-4 h-4 text-brand-cyan"></i>
+              <span class="text-xs font-semibold text-slate-200">Trusted by 2M+ customers worldwide</span>
+            </div>
+            <h1 class="font-display text-5xl md:text-6xl lg:text-7xl font-bold text-white leading-[1.05] mb-6">
+              Banking<br/>
+              <span class="gradient-text">Beyond</span><br/>
+              Boundaries.
+            </h1>
+            <p class="text-lg text-slate-300 mb-8 leading-relaxed max-w-lg">
+              Experience a smarter digital banking platform designed around your financial life.
+            </p>
+            <div class="flex flex-wrap gap-4 mb-12">
+              <a href="#/signup" class="btn-primary font-semibold px-8 py-4 rounded-xl flex items-center gap-2 shadow-glow">
+                Open Account <i data-lucide="arrow-right" class="w-5 h-5"></i>
+              </a>
+              <a href="#/login" class="btn-ghost font-semibold px-8 py-4 rounded-xl">
+                Sign In
+              </a>
+            </div>
+            <div class="grid grid-cols-3 gap-6 pt-8 border-t border-white/10">
+              <div><div class="text-3xl font-bold gradient-text font-display">$50B+</div><div class="text-xs text-slate-400 mt-1">Assets Managed</div></div>
+              <div><div class="text-3xl font-bold gradient-text font-display">2M+</div><div class="text-xs text-slate-400 mt-1">Customers</div></div>
+              <div><div class="text-3xl font-bold gradient-text font-display">150+</div><div class="text-xs text-slate-400 mt-1">Countries</div></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- FEATURES -->
+      <section id="features" class="relative z-10 px-6 py-24">
+        <div class="max-w-7xl mx-auto">
+          <div class="text-center mb-16">
+            <div class="inline-block glass rounded-full px-4 py-1.5 text-xs font-semibold text-brand-cyan mb-4 tracking-wider">WHY SKYLINE CAPITAL</div>
+            <h2 class="font-display text-4xl md:text-5xl font-bold text-white mb-4">Built for the modern era</h2>
+            <p class="text-slate-400 max-w-2xl mx-auto">Everything you need in a premium financial platform, without the complexity.</p>
+          </div>
+          <div class="grid md:grid-cols-3 gap-6">
+            ${[
+              { icon: 'shield-check', title: 'Secure Access', desc: 'Bank-grade encryption, biometric authentication, and 24/7 fraud monitoring protect every transaction.' },
+              { icon: 'brain-circuit', title: 'Smart Financial Insights', desc: 'AI-powered analytics help you understand spending patterns and optimize your financial future.' },
+              { icon: 'zap', title: 'Simple Digital Banking', desc: 'Intuitive interface designed for speed. Manage your finances in seconds, not minutes.' }
+            ].map(f => `
+              <div class="glass rounded-3xl p-8 hover:border-brand-cyan/30 transition-all duration-300 hover:-translate-y-1 group">
+                <div class="w-14 h-14 gradient-brand rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition">
+                  <i data-lucide="${f.icon}" class="w-7 h-7 text-white"></i>
+                </div>
+                <h3 class="font-display text-xl font-bold text-white mb-3">${f.title}</h3>
+                <p class="text-slate-400 text-sm leading-relaxed">${f.desc}</p>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      </section>
+
+      <!-- MARKET INSIGHTS CHART -->
+      <section id="insights" class="relative z-10 px-6 py-24">
+        <div class="max-w-7xl mx-auto">
+          <div class="text-center mb-12">
+            <div class="inline-block glass rounded-full px-4 py-1.5 text-xs font-semibold text-brand-cyan mb-4 tracking-wider">MARKET INSIGHTS</div>
+            <h2 class="font-display text-4xl md:text-5xl font-bold text-white mb-4">Intelligent market analysis</h2>
+            <p class="text-slate-400 max-w-2xl mx-auto">Visualize market trends with our interactive analytics.</p>
+          </div>
+          <div class="glass rounded-3xl p-6 md:p-8">
+            <div class="flex flex-col md:flex-row md:items-center justify-between mb-6 gap-4">
+              <div>
+                <div class="flex items-center gap-2 mb-2">
+                  <i data-lucide="trending-up" class="w-5 h-5 text-brand-cyan"></i>
+                  <h3 class="font-display text-xl font-bold text-white">S&P 500 Index</h3>
+                </div>
+                <p class="text-xs text-slate-400">Illustrative market data — for demonstration purposes only</p>
+              </div>
+              <div class="flex items-baseline gap-3">
+                <span class="font-display text-3xl font-bold text-white">4,783.45</span>
+                <span class="text-emerald-400 font-semibold text-sm flex items-center gap-1">
+                  <i data-lucide="arrow-up-right" class="w-4 h-4"></i> +2.34%
+                </span>
+              </div>
+            </div>
+            <div style="height: 320px;"><canvas id="marketChart"></canvas></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECURITY -->
+      <section id="security" class="relative z-10 px-6 py-24">
+        <div class="max-w-7xl mx-auto grid md:grid-cols-2 gap-12 items-center">
+          <div>
+            <div class="inline-block glass rounded-full px-4 py-1.5 text-xs font-semibold text-brand-cyan mb-4 tracking-wider">BANK-GRADE SECURITY</div>
+            <h2 class="font-display text-4xl md:text-5xl font-bold text-white mb-6 leading-tight">Your security.<br/><span class="gradient-text">Our obsession.</span></h2>
+            <p class="text-slate-400 mb-8 leading-relaxed">We use the same security standards as the world's largest financial institutions.</p>
+            <div class="space-y-3">
+              ${[
+                { icon: 'lock', title: '256-bit encryption', desc: 'Military-grade data protection' },
+                { icon: 'fingerprint', title: 'Biometric login', desc: 'Face ID and fingerprint support' },
+                { icon: 'shield', title: 'FDIC insured', desc: 'Up to $250,000 per depositor' }
+              ].map(s => `
+                <div class="glass rounded-2xl p-4 flex items-start gap-4 hover:border-brand-cyan/30 transition">
+                  <div class="w-11 h-11 bg-brand-cyan/10 rounded-xl flex items-center justify-center flex-shrink-0">
+                    <i data-lucide="${s.icon}" class="w-5 h-5 text-brand-cyan"></i>
+                  </div>
+                  <div>
+                    <div class="font-semibold text-white mb-0.5">${s.title}</div>
+                    <div class="text-sm text-slate-400">${s.desc}</div>
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+          <div class="glass rounded-3xl p-8">
+            <div class="flex items-center justify-between mb-6">
+              <h3 class="font-display font-bold text-white">Security Status</h3>
+              <span class="bg-emerald-500/10 text-emerald-400 text-xs font-semibold px-3 py-1 rounded-full border border-emerald-500/20">All Secure</span>
+            </div>
+            <div class="space-y-3">
+              ${['Two-factor authentication', 'Device recognition', 'Transaction alerts', 'Fraud detection', 'Encrypted messaging'].map(s => `
+                <div class="flex items-center justify-between p-3.5 bg-white/5 rounded-xl border border-white/5">
+                  <span class="text-sm font-medium text-slate-200">${s}</span>
+                  <i data-lucide="check-circle-2" class="w-5 h-5 text-emerald-400"></i>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- CONTACT / CTA -->
+      <section id="contact" class="relative z-10 px-6 py-24">
+        <div class="max-w-5xl mx-auto gradient-card rounded-3xl p-10 md:p-16 text-center relative overflow-hidden border border-white/10">
+          <div class="orb w-96 h-96 bg-brand-cyan -top-40 -right-40 opacity-30"></div>
+          <div class="relative z-10">
+            <h2 class="font-display text-4xl md:text-5xl font-bold text-white mb-4">Ready to bank better?</h2>
+            <p class="text-lg text-slate-300 mb-8 max-w-2xl mx-auto">Join millions who trust Skyline Capital with their financial future.</p>
+            <a href="#/signup" class="inline-block btn-primary font-semibold px-8 py-4 rounded-xl shadow-glow">
+              Open Your Account
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- FOOTER -->
+      <footer class="relative z-10 px-6 py-12 border-t border-white/5">
+        <div class="max-w-7xl mx-auto">
+          <div class="grid md:grid-cols-4 gap-8 mb-10">
+            <div>
+              <div class="flex items-center gap-2 mb-4">
+                <div class="w-9 h-9 gradient-brand rounded-lg flex items-center justify-center">
+                  <i data-lucide="landmark" class="w-4 h-4 text-white"></i>
+                </div>
+                <div>
+                  <div class="font-display font-bold text-white leading-none">SKYLINE</div>
+                  <div class="text-[9px] tracking-[0.3em] text-brand-cyan font-semibold">CAPITAL</div>
+                </div>
+              </div>
+              <p class="text-slate-500 text-sm leading-relaxed">Banking Beyond Boundaries. Building financial freedom since 2020.</p>
+            </div>
+            ${[
+              { title: 'Product', links: ['Personal', 'Business', 'Cards', 'Transfers'] },
+              { title: 'Company', links: ['About', 'Careers', 'Press', 'Contact'] },
+              { title: 'Legal', links: ['Privacy', 'Terms', 'Security', 'Cookies'] }
+            ].map(c => `
+              <div>
+                <h4 class="font-semibold text-white mb-4 text-sm">${c.title}</h4>
+                <ul class="space-y-2 text-slate-500 text-sm">
+                  ${c.links.map(l => `<li><a href="#" class="hover:text-brand-cyan transition">${l}</a></li>`).join('')}
+                </ul>
+              </div>
+            `).join('')}
+          </div>
+          <div class="pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-4">
+            <p class="text-slate-500 text-xs">© 2026 Skyline Capital. All rights reserved. Member FDIC.</p>
+            <div class="flex gap-3">
+              ${['twitter', 'linkedin', 'instagram', 'facebook'].map(s => `
+                <a href="#" class="w-9 h-9 glass rounded-full flex items-center justify-center hover:border-brand-cyan/30 transition">
+                  <i data-lucide="${s}" class="w-4 h-4 text-slate-400"></i>
+                </a>
+              `).join('')}
+            </div>
+          </div>
+        </div>
+      </footer>
+    </div>
+  `;
+  lucide.createIcons();
+  renderMarketChart();
+}
+
+function renderMarketChart() {
+  const ctx = $('#marketChart');
+  if (!ctx) return;
+  if (state.charts.market) state.charts.market.destroy();
+  state.charts.market = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],
+      datasets: [{
+        label: 'S&P 500 (Illustrative)',
+        data: [4200, 4320, 4280, 4450, 4520, 4480, 4600, 4550, 4680, 4720, 4750, 4783],
+        borderColor: '#22D3EE',
+        backgroundColor: (ctx) => {
+          const g = ctx.chart.ctx.createLinearGradient(0, 0, 0, 320);
+          g.addColorStop(0, 'rgba(34, 211, 238, 0.3)');
+          g.addColorStop(1, 'rgba(34, 211, 238, 0)');
+          return g;
+        },
+        fill: true, tension: 0.4, borderWidth: 3,
+        pointBackgroundColor: '#22D3EE', pointRadius: 0, pointHoverRadius: 6
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false },
+        tooltip: {
+          backgroundColor: 'rgba(10, 17, 40, 0.9)',
+          borderColor: 'rgba(34, 211, 238, 0.3)',
+          borderWidth: 1,
+          titleColor: '#E2E8F0',
+          bodyColor: '#22D3EE',
+          padding: 12,
+          cornerRadius: 8
+        }
+      },
+      scales: {
+        y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#64748B', callback: v => '$' + v } },
+        x: { grid: { display: false }, ticks: { color: '#64748B' } }
+      }
+    }
+  });
+}
+
+// ============ AUTH SHELL ============
+function authShell(title, subtitle, icon, content, footer) {
+  return `
+    <div class="min-h-screen gradient-ink flex items-center justify-center p-4 relative overflow-hidden">
+      <div class="orb w-96 h-96 bg-brand-cyan -top-20 -left-20"></div>
+      <div class="orb w-96 h-96 bg-brand-indigo bottom-0 -right-20"></div>
+      <div class="w-full max-w-md relative z-10 fade-in">
+        <a href="#/" class="flex items-center justify-center gap-3 mb-8">
+          <div class="w-12 h-12 gradient-brand rounded-xl flex items-center justify-center pulse-glow">
+            <i data-lucide="landmark" class="w-6 h-6 text-white"></i>
+          </div>
+          <div>
+            <div class="font-display font-bold text-white text-xl leading-none">SKYLINE</div>
+            <div class="text-[10px] tracking-[0.3em] text-brand-cyan font-semibold">CAPITAL</div>
+          </div>
+        </a>
+        <div class="glass-strong rounded-3xl p-8 shadow-2xl">
+          <div class="text-center mb-8">
+            <div class="w-16 h-16 gradient-brand rounded-2xl flex items-center justify-center mx-auto mb-4">
+              <i data-lucide="${icon}" class="w-8 h-8 text-white"></i>
+            </div>
+            <h1 class="font-display text-2xl font-bold text-white mb-2">${title}</h1>
+            <p class="text-slate-400 text-sm">${subtitle}</p>
+          </div>
+          <div id="authAlert" class="hidden mb-4 p-3 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-300 text-sm flex items-start gap-2">
+            <i data-lucide="alert-circle" class="w-4 h-4 flex-shrink-0 mt-0.5"></i>
+            <span id="authAlertText"></span>
+          </div>
+          ${content}
+          <div class="mt-6 text-center text-sm text-slate-400">${footer}</div>
+        </div>
+        <div class="text-center mt-6 text-xs text-slate-500">
+          Banking Beyond Boundaries · © 2026 Skyline Capital
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function showAuthError(msg) {
+  $('#authAlertText').textContent = msg;
+  $('#authAlert').classList.remove('hidden');
+  lucide.createIcons();
+}
+function hideAuthError() { $('#authAlert').classList.add('hidden'); }
+
+// ============ LOGIN ============
+function renderLogin() {
+  $('#app').innerHTML = authShell(
+    'Welcome to Skyline Capital',
+    'Sign in to access your account',
+    'log-in',
+    `<form id="loginForm" class="space-y-4">
+      <div>
+        <label class="block text-xs font-semibold text-slate-300 mb-1.5 tracking-wider">EMAIL</label>
+        <div class="relative">
+          <i data-lucide="mail" class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500"></i>
+          <input type="email" id="loginEmail" required class="input-field w-full pl-11 pr-4 py-3 rounded-xl" placeholder="you@example.com" autocomplete="email">
+        </div>
+      </div>
+      <div>
+        <label class="block text-xs font-semibold text-slate-300 mb-1.5 tracking-wider">PASSWORD</label>
+        <div class="relative">
+          <i data-lucide="lock" class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500"></i>
+          <input type="password" id="loginPassword" required class="input-field w-full pl-11 pr-11 py-3 rounded-xl" placeholder="••••••••" autocomplete="current-password">
+          <button type="button" onclick="togglePw('loginPassword', this)" class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 hover:text-brand-cyan">
+            <i data-lucide="eye" class="w-4 h-4"></i>
+          </button>
+        </div>
+      </div>
+      <div class="flex items-center justify-between text-sm">
+        <label class="flex items-center gap-2 cursor-pointer">
+          <input type="checkbox" id="rememberMe" class="w-4 h-4 rounded border-white/20 bg-white/5 text-brand-cyan">
+          <span class="text-slate-300">Remember me</span>
+        </label>
+        <a href="#/forgot-password" class="text-brand-cyan hover:text-brand-blue font-medium">Forgot password?</a>
+      </div>
+      <button type="submit" id="loginBtn" class="btn-primary w-full font-semibold py-3.5 rounded-xl flex items-center justify-center gap-2">
+        <i data-lucide="shield-check" class="w-4 h-4"></i>
+        <span>Sign In Securely</span>
+      </button>
+    </form>`,
+    `Don't have an account? <a href="#/signup" class="text-brand-cyan hover:text-brand-blue font-semibold">Create one</a>`
+  );
+  lucide.createIcons();
+
+  $('#loginForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    hideAuthError();
+    const btn = $('#loginBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<div class="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>';
+    const { error } = await sb.auth.signInWithPassword({
+      email: $('#loginEmail').value,
+      password: $('#loginPassword').value
+    });
+    if (error) {
+      showAuthError('Incorrect email or password. Please try again.');
+      btn.disabled = false;
+      btn.innerHTML = '<i data-lucide="shield-check" class="w-4 h-4"></i><span>Sign In Securely</span>';
+      lucide.createIcons();
+    } else {
+      toast('Welcome back!', 'success');
+      navigate('/dashboard');
+    }
+  });
+}
+
+// ============ SIGNUP ============
+function renderSignup() {
+  $('#app').innerHTML = authShell(
+    'Create your account',
+    'Join Skyline Capital in minutes',
+    'user-plus',
+    `<form id="signupForm" class="space-y-4">
+      <div>
+        <label class="block text-xs font-semibold text-slate-300 mb-1.5 tracking-wider">FULL NAME</label>
+        <div class="relative">
+          <i data-lucide="user" class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500"></i>
+          <input type="text" id="signupName" required class="input-field w-full pl-11 pr-4 py-3 rounded-xl" placeholder="John Doe" autocomplete="name">
+        </div>
+      </div>
+      <div>
+        <label class="block text-xs font-semibold text-slate-300 mb-1.5 tracking-wider">EMAIL</label>
+        <div class="relative">
+          <i data-lucide="mail" class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500"></i>
+          <input type="email" id="signupEmail" required class="input-field w-full pl-11 pr-4 py-3 rounded-xl" placeholder="you@example.com" autocomplete="email">
+        </div>
+      </div>
+      <div>
+        <label class="block text-xs font-semibold text-slate-300 mb-1.5 tracking-wider">PHONE NUMBER</label>
+        <div class="relative">
+          <i data-lucide="phone" class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500"></i>
+          <input type="tel" id="signupPhone" class="input-field w-full pl-11 pr-4 py-3 rounded-xl" placeholder="+1 (555) 000-0000" autocomplete="tel">
+        </div>
+      </div>
+      <div>
+        <label class="block text-xs font-semibold text-slate-300 mb-1.5 tracking-wider">PASSWORD</label>
+        <div class="relative">
+          <i data-lucide="lock" class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500"></i>
+          <input type="password" id="signupPassword" required minlength="8" class="input-field w-full pl-11 pr-11 py-3 rounded-xl" placeholder="Min. 8 characters" autocomplete="new-password">
+          <button type="button" onclick="togglePw('signupPassword', this)" class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-500 hover:text-brand-cyan">
+            <i data-lucide="eye" class="w-4 h-4"></i>
+          </button>
+        </div>
+      </div>
+      <div>
+        <label class="block text-xs font-semibold text-slate-300 mb-1.5 tracking-wider">CONFIRM PASSWORD</label>
+        <div class="relative">
+          <i data-lucide="lock" class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500"></i>
+          <input type="password" id="signupConfirm" required class="input-field w-full pl-11 pr-4 py-3 rounded-xl" placeholder="••••••••" autocomplete="new-password">
+        </div>
+      </div>
+      <label class="flex items-start gap-2 cursor-pointer">
+        <input type="checkbox" required class="w-4 h-4 mt-0.5 rounded border-white/20 bg-white/5 text-brand-cyan">
+        <span class="text-xs text-slate-400">I agree to the <a href="#" class="text-brand-cyan hover:underline">Terms of Service</a> and <a href="#" class="text-brand-cyan hover:underline">Privacy Policy</a></span>
+      </label>
+      <button type="submit" id="signupBtn" class="btn-primary w-full font-semibold py-3.5 rounded-xl">Create Account</button>
+    </form>`,
+    `Already have an account? <a href="#/login" class="text-brand-cyan hover:text-brand-blue font-semibold">Sign in</a>`
+  );
+  lucide.createIcons();
+
+  $('#signupForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    hideAuthError();
+    const pw = $('#signupPassword').value;
+    const confirm = $('#signupConfirm').value;
+    if (pw !== confirm) { showAuthError('Passwords do not match'); return; }
+
+    const btn = $('#signupBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<div class="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin mx-auto"></div>';
+
+    const { data, error } = await sb.auth.signUp({
+      email: $('#signupEmail').value,
+      password: pw,
+      options: { data: { full_name: $('#signupName').value, phone: $('#signupPhone').value } }
+    });
+
+    if (error) {
+      showAuthError(error.message);
+      btn.disabled = false;
+      btn.textContent = 'Create Account';
+    } else {
+      if (data.user && data.user.identities?.length === 0) {
+        toast('Please check your email to verify your account', 'info');
+        setTimeout(() => navigate('/login'), 2500);
+      } else {
+        toast('Account created! Redirecting...', 'success');
+        setTimeout(() => navigate('/dashboard'), 1000);
+      }
+    }
+  });
+}
+
+// ============ FORGOT PASSWORD ============
+function renderForgot() {
+  $('#app').innerHTML = authShell(
+    'Reset your password',
+    'Enter your email and we\'ll send you a reset link',
+    'key-round',
+    `<form id="forgotForm" class="space-y-4">
+      <div>
+        <label class="block text-xs font-semibold text-slate-300 mb-1.5 tracking-wider">EMAIL</label>
+        <input type="email" id="forgotEmail" required class="input-field w-full px-4 py-3 rounded-xl" placeholder="you@example.com">
+      </div>
+      <button type="submit" id="forgotBtn" class="btn-primary w-full font-semibold py-3.5 rounded-xl">Send Reset Link</button>
+    </form>`,
+    `<a href="#/login" class="text-brand-cyan hover:text-brand-blue font-semibold">← Back to sign in</a>`
+  );
+  lucide.createIcons();
+
+  $('#forgotForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn = $('#forgotBtn');
+    btn.disabled = true;
+    btn.textContent = 'Sending...';
+    const { error } = await sb.auth.resetPasswordForEmail($('#forgotEmail').value, {
+      redirectTo: window.location.origin + window.location.pathname + '#/reset-password'
+    });
+    btn.disabled = false;
+    btn.textContent = 'Send Reset Link';
+    if (error) showAuthError(error.message);
+    else {
+      $('#forgotForm').innerHTML = `
+        <div class="text-center py-6">
+          <div class="w-16 h-16 bg-emerald-500/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
+            <i data-lucide="mail-check" class="w-8 h-8 text-emerald-400"></i>
+          </div>
+          <h3 class="font-display font-bold text-white mb-2">Check your email</h3>
+          <p class="text-slate-400 text-sm">We've sent a password reset link to your email address.</p>
+        </div>
+      `;
+      lucide.createIcons();
+    }
+  });
+}
+
+// ============ RESET PASSWORD ============
+function renderReset() {
+  $('#app').innerHTML = authShell(
+    'Set new password',
+    'Enter your new password below',
+    'lock-keyhole',
+    `<form id="resetForm" class="space-y-4">
+      <div>
+        <label class="block text-xs font-semibold text-slate-300 mb-1.5 tracking-wider">NEW PASSWORD</label>
+        <input type="password" id="resetPw" required minlength="8" class="input-field w-full px-4 py-3 rounded-xl" placeholder="Min. 8 characters">
+      </div>
+      <div>
+        <label class="block text-xs font-semibold text-slate-300 mb-1.5 tracking-wider">CONFIRM PASSWORD</label>
+        <input type="password" id="resetConfirm" required class="input-field w-full px-4 py-3 rounded-xl" placeholder="••••••••">
+      </div>
+      <button type="submit" id="resetBtn" class="btn-primary w-full font-semibold py-3.5 rounded-xl">Update Password</button>
+    </form>`,
+    ''
+  );
+  lucide.createIcons();
+
+  $('#resetForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const pw = $('#resetPw').value;
+    const confirm = $('#resetConfirm').value;
+    if (pw !== confirm) { showAuthError('Passwords do not match'); return; }
+    const btn = $('#resetBtn');
+    btn.disabled = true;
+    btn.textContent = 'Updating...';
+    const { error } = await sb.auth.updateUser({ password: pw });
+    if (error) {
+      showAuthError(error.message);
+      btn.disabled = false;
+      btn.textContent = 'Update Password';
+    } else {
+      toast('Password updated! Please sign in.', 'success');
+      setTimeout(() => navigate('/login'), 1500);
+    }
+  });
+}
+
+function togglePw(id, btn) {
+  const input = document.getElementById(id);
+  input.type = input.type === 'password' ? 'text' : 'password';
+  btn.innerHTML = input.type === 'password' ? '<i data-lucide="eye" class="w-4 h-4"></i>' : '<i data-lucide="eye-off" class="w-4 h-4"></i>';
+  lucide.createIcons();
+}
+
+// ============ DASHBOARD SHELL ============
+function renderShell(contentRenderer) {
+  const name = state.profile?.full_name || state.user?.email?.split('@')[0] || 'User';
+  const initial = name.charAt(0).toUpperCase();
+  const unreadCount = state.notifications.filter(n => !n.is_read).length;
+
+  $('#app').innerHTML = `
+    <div class="flex min-h-screen gradient-ink">
+      <!-- SIDEBAR -->
+      <aside id="sidebar" class="sidebar-desktop w-64 bg-ink-900 border-r border-white/5 h-screen flex flex-col lg:sticky lg:top-0">
+        <div class="p-6 border-b border-white/5">
+          <a href="#/dashboard" class="flex items-center gap-3">
+            <div class="w-10 h-10 gradient-brand rounded-xl flex items-center justify-center">
+              <i data-lucide="landmark" class="w-5 h-5 text-white"></i>
+            </div>
+            <div>
+              <div class="font-display font-bold text-white leading-none">SKYLINE</div>
+              <div class="text-[9px] tracking-[0.3em] text-brand-cyan font-semibold">CAPITAL</div>
+            </div>
+          </a>
+        </div>
+        <nav class="flex-1 p-4 overflow-y-auto no-scrollbar">
+          <div class="text-[10px] font-semibold text-slate-500 uppercase tracking-widest mb-3 px-3">Main</div>
+          ${[
+            { href: '/dashboard', icon: 'layout-dashboard', label: 'Overview' },
+            { href: '/accounts', icon: 'wallet', label: 'My Accounts' },
+            { href: '/transactions', icon: 'arrow-left-right', label: 'Transactions' },
+            { href: '/transfers', icon: 'send', label: 'Transfers' },
+            { href: '/payments', icon: 'credit-card', label: 'Payments' },
+            { href: '/cards', icon: 'credit-card', label: 'Cards' },
+            { href: '/beneficiaries', icon: 'users', label: 'Beneficiaries' },
+            { href: '/statements', icon: 'file-text', label: 'Statements' }
+          ].map(n => `
+            <a href="#${n.href}" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-300 text-sm font-medium mb-1 ${window.location.hash === n.href ? 'active' : ''}">
+              <i data-lucide="${n.icon}" class="w-4 h-4"></i>
+              <span>${n.label}</span>
+            </a>
+          `).join('')}
+          <div class="text-[10px] font-semibold text-slate-500 uppercase tracking-widest mb-3 mt-6 px-3">Account</div>
+          <a href="#/notifications" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-300 text-sm font-medium mb-1 ${window.location.hash === '/notifications' ? 'active' : ''}">
+            <i data-lucide="bell" class="w-4 h-4"></i>
+            <span class="flex-1">Notifications</span>
+            ${unreadCount > 0 ? `<span class="bg-brand-cyan text-ink-950 text-[10px] font-bold px-1.5 py-0.5 rounded-full">${unreadCount}</span>` : ''}
+          </a>
+          <a href="#/profile" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-300 text-sm font-medium mb-1 ${window.location.hash === '/profile' ? 'active' : ''}">
+            <i data-lucide="user" class="w-4 h-4"></i>
+            <span>Profile</span>
+          </a>
+          <a href="#/security" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-300 text-sm font-medium mb-1 ${window.location.hash === '/security' ? 'active' : ''}">
+            <i data-lucide="shield" class="w-4 h-4"></i>
+            <span>Security</span>
+          </a>
+          <a href="#/support" class="nav-item flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-300 text-sm font-medium mb-1 ${window.location.hash === '/support' ? 'active' : ''}">
+            <i data-lucide="life-buoy" class="w-4 h-4"></i>
+            <span>Support</span>
+          </a>
+        </nav>
+        <div class="p-4 border-t border-white/5">
+          <button onclick="doLogout()" class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-rose-400 text-sm font-medium hover:bg-rose-500/10">
+            <i data-lucide="log-out" class="w-4 h-4"></i>
+            <span>Logout</span>
+          </button>
+        </div>
+      </aside>
+
+      <!-- MAIN -->
+      <div class="flex-1 flex flex-col min-w-0">
+        <!-- HEADER -->
+        <header class="bg-ink-900/80 backdrop-blur-xl border-b border-white/5 px-6 py-4 flex items-center justify-between sticky top-0 z-30">
+          <div class="flex items-center gap-4 flex-1">
+            <button onclick="toggleSidebar()" class="lg:hidden text-slate-300 hover:text-white">
+              <i data-lucide="menu" class="w-6 h-6"></i>
+            </button>
+            <div class="relative max-w-md flex-1 hidden md:block">
+              <i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500"></i>
+              <input type="text" placeholder="Search transactions, accounts..." class="input-field w-full pl-10 pr-4 py-2 rounded-xl text-sm">
+            </div>
+          </div>
+          <div class="flex items-center gap-2">
+            <button onclick="navigate('/notifications')" class="relative p-2 hover:bg-white/5 rounded-xl transition">
+              <i data-lucide="bell" class="w-5 h-5 text-slate-300"></i>
+              ${unreadCount > 0 ? `<span class="absolute top-1.5 right-1.5 w-2 h-2 bg-brand-cyan rounded-full"></span>` : ''}
+            </button>
+            <div class="relative">
+              <button onclick="toggleUserMenu(event)" class="flex items-center gap-2 p-1 hover:bg-white/5 rounded-xl transition">
+                <div class="w-9 h-9 gradient-brand rounded-full flex items-center justify-center text-white font-semibold text-sm">${initial}</div>
+                <div class="hidden sm:block text-left">
+                  <div class="text-sm font-semibold text-white leading-tight">${name}</div>
+                  <div class="text-xs text-slate-500">${state.user.email}</div>
+                </div>
+              </button>
+              <div id="userMenu" class="hidden absolute right-0 top-full mt-2 w-56 glass-strong rounded-2xl shadow-2xl py-2 z-50">
+                <div class="px-4 py-2 border-b border-white/5">
+                  <div class="text-sm font-semibold text-white">${name}</div>
+                  <div class="text-xs text-slate-500 truncate">${state.user.email}</div>
+                </div>
+                <a href="#/profile" class="flex items-center gap-2 px-4 py-2 text-sm text-slate-300 hover:bg-white/5">
+                  <i data-lucide="user" class="w-4 h-4"></i> My Profile
+                </a>
+                <a href="#/security" class="flex items-center gap-2 px-4 py-2 text-sm text-slate-300 hover:bg-white/5">
+                  <i data-lucide="shield" class="w-4 h-4"></i> Security
+                </a>
+                <button onclick="doLogout()" class="w-full flex items-center gap-2 px-4 py-2 text-sm text-rose-400 hover:bg-rose-500/10">
+                  <i data-lucide="log-out" class="w-4 h-4"></i> Logout
+                </button>
+              </div>
+            </div>
+          </div>
+        </header>
+
+        <!-- CONTENT -->
+        <main class="flex-1 p-6 overflow-y-auto">
+          <div id="pageContent" class="fade-in max-w-7xl mx-auto"></div>
+        </main>
+      </div>
+    </div>
+    <div id="sidebarOverlay" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-40 lg:hidden" onclick="toggleSidebar()"></div>
+  `;
+  lucide.createIcons();
+  contentRenderer();
+}
+
+function toggleSidebar() {
+  $('#sidebar').classList.toggle('open');
+  $('#sidebarOverlay').classList.toggle('hidden');
+}
+function toggleUserMenu(e) {
+  e.stopPropagation();
+  $('#userMenu').classList.toggle('hidden');
+}
+document.addEventListener('click', (e) => {
+  const menu = $('#userMenu');
+  if (menu && !e.target.closest('[onclick*="toggleUserMenu"]') && !e.target.closest('#userMenu')) {
+    menu.classList.add('hidden');
+  }
+});
+
+async function doLogout() {
+  await sb.auth.signOut();
+  state.user = null;
+  state.profile = null;
+  state.accounts = [];
+  state.transactions = [];
+  state.cards = [];
+  state.beneficiaries = [];
+  state.notifications = [];
+  state.tickets = [];
+  toast('Logged out successfully', 'info');
+  navigate('/');
+}
+
+// ============ DASHBOARD ============
+function renderDashboard() {
+  const name = state.profile?.full_name || state.user.email.split('@')[0];
+  const totalBalance = state.accounts.reduce((s, a) => s + Number(a.balance || 0), 0);
+  const totalAvailable = state.accounts.reduce((s, a) => s + Number(a.available_balance || a.balance || 0), 0);
+  const income = state.transactions.filter(t => t.type === 'credit').reduce((s, t) => s + Number(t.amount || 0), 0);
+  const expenses = state.transactions.filter(t => t.type === 'debit').reduce((s, t) => s + Number(t.amount || 0), 0);
+  const recentTx = state.transactions.slice(0, 5);
+
+  $('#pageContent').innerHTML = `
+    <!-- Welcome -->
+    <div class="mb-8">
+      <h1 class="font-display text-3xl md:text-4xl font-bold text-white mb-1">Welcome back, ${name}</h1>
+      <p class="text-slate-400">Here's your financial overview for today.</p>
+    </div>
+
+    <!-- Stats -->
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+      ${[
+        { label: 'Total Balance', value: state.accounts.length ? fmt(totalBalance) : '—', icon: 'wallet', color: 'from-brand-cyan to-brand-blue', sub: state.accounts.length + ' account' + (state.accounts.length !== 1 ? 's' : '') },
+        { label: 'Available', value: state.accounts.length ? fmt(totalAvailable) : '—', icon: 'piggy-bank', color: 'from-emerald-500 to-teal-500', sub: 'Ready to spend' },
+        { label: 'Income', value: fmt(income), icon: 'trending-up', color: 'from-brand-blue to-brand-indigo', sub: state.transactions.filter(t => t.type === 'credit').length + ' transactions' },
+        { label: 'Expenses', value: fmt(expenses), icon: 'trending-down', color: 'from-rose-500 to-pink-500', sub: state.transactions.filter(t => t.type === 'debit').length + ' transactions' }
+      ].map(s => `
+        <div class="glass rounded-2xl p-5 hover:border-brand-cyan/20 transition">
+          <div class="flex items-start justify-between mb-3">
+            <div class="w-10 h-10 bg-gradient-to-br ${s.color} rounded-xl flex items-center justify-center">
+              <i data-lucide="${s.icon}" class="w-5 h-5 text-white"></i>
+            </div>
+          </div>
+          <div class="text-xs text-slate-400 mb-1">${s.label}</div>
+          <div class="font-display text-xl font-bold text-white mb-1">${s.value}</div>
+          <div class="text-xs text-slate-500">${s.sub}</div>
+        </div>
+      `).join('')}
+    </div>
+
+    <div class="grid lg:grid-cols-3 gap-6 mb-6">
+      <!-- Account Card -->
+      <div class="lg:col-span-1">
+        ${state.accounts.length === 0 ? `
+          <div class="glass rounded-2xl p-6 h-full">
+            ${emptyState('wallet', 'No account available', 'Your account information will appear here once an account has been created.')}
+          </div>
+        ` : `
+          <div class="gradient-card rounded-2xl p-6 text-white card-shine relative overflow-hidden h-full border border-white/10">
+            <div class="flex justify-between items-start mb-8 relative z-10">
+              <div class="flex items-center gap-2">
+                <div class="w-8 h-8 gradient-brand rounded-lg flex items-center justify-center">
+                  <i data-lucide="landmark" class="w-4 h-4 text-white"></i>
+                </div>
+                <span class="font-display font-bold">Skyline Capital</span>
+              </div>
+              <i data-lucide="wifi" class="w-5 h-5 rotate-90 opacity-80"></i>
+            </div>
+            <div class="text-white/60 text-xs mb-1 relative z-10">Account Number</div>
+            <div class="font-mono text-lg tracking-wider mb-6 relative z-10">${state.accounts[0].account_number}</div>
+            <div class="flex justify-between items-end relative z-10">
+              <div>
+                <div class="text-xs text-white/60 mb-1">Available Balance</div>
+                <div class="font-display text-2xl font-bold">${fmt(state.accounts[0].available_balance || state.accounts[0].balance)}</div>
+                <div class="text-xs text-white/60 mt-1">${state.accounts[0].currency || 'USD'}</div>
+              </div>
+              <div class="font-display text-xl font-bold italic opacity-80">VISA</div>
+            </div>
+          </div>
+        `}
+      </div>
+
+      <!-- Balance Chart -->
+      <div class="lg:col-span-2 glass rounded-2xl p-6">
+        <div class="flex items-center justify-between mb-6">
+          <div>
+            <h3 class="font-display font-bold text-white">Balance History</h3>
+            <p class="text-xs text-slate-400">Based on your transaction data</p>
+          </div>
+        </div>
+        <div style="height: 250px;">
+          ${state.transactions.length < 2 ? `
+            <div class="h-full flex flex-col items-center justify-center text-center">
+              <i data-lucide="line-chart" class="w-10 h-10 text-slate-600 mb-3"></i>
+              <p class="text-sm text-slate-400 mb-1">Not enough transaction data</p>
+              <p class="text-xs text-slate-500">Your financial analytics will appear after you have account activity.</p>
+            </div>
+          ` : `<canvas id="balanceChart"></canvas>`}
+        </div>
+      </div>
+    </div>
+
+    <!-- Recent Transactions -->
+    <div class="glass rounded-2xl overflow-hidden">
+      <div class="p-6 border-b border-white/5 flex items-center justify-between">
+        <div>
+          <h3 class="font-display font-bold text-white">Recent Transactions</h3>
+          <p class="text-xs text-slate-400">Your latest account activity</p>
+        </div>
+        <a href="#/transactions" class="text-sm text-brand-cyan hover:text-brand-blue font-medium flex items-center gap-1">
+          View All <i data-lucide="arrow-right" class="w-4 h-4"></i>
+        </a>
+      </div>
+      ${recentTx.length === 0 ? emptyState('inbox', 'No transactions yet', 'Your recent account activity will appear here.') : `
+        <div class="divide-y divide-white/5">
+          ${recentTx.map(tx => renderTransactionRow(tx)).join('')}
+        </div>
+      `}
+    </div>
+  `;
+  lucide.createIcons();
+  if (state.transactions.length >= 2) renderBalanceChart();
+}
+
+function renderTransactionRow(tx) {
+  const isCredit = tx.type === 'credit';
+  return `
+    <div class="p-4 hover:bg-white/5 transition flex items-center gap-4 cursor-pointer" onclick='showTxDetail(${JSON.stringify(tx).replace(/'/g, "&#39;")})'>
+      <div class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 ${isCredit ? 'bg-emerald-500/10' : 'bg-rose-500/10'}">
+        <i data-lucide="${isCredit ? 'arrow-down-left' : 'arrow-up-right'}" class="w-5 h-5 ${isCredit ? 'text-emerald-400' : 'text-rose-400'}"></i>
+      </div>
+      <div class="flex-1 min-w-0">
+        <div class="font-semibold text-white text-sm truncate">${tx.description || 'Transaction'}</div>
+        <div class="text-xs text-slate-500 flex items-center gap-2">
+          <span>${fmtDate(tx.created_at)}</span>
+          ${tx.category ? `<span>·</span><span class="capitalize">${tx.category}</span>` : ''}
+        </div>
+      </div>
+      <div class="text-right">
+        <div class="font-display font-bold text-sm ${isCredit ? 'text-emerald-400' : 'text-white'}">
+          ${isCredit ? '+' : '-'}${fmt(tx.amount)}
+        </div>
+        <div class="text-xs ${tx.status === 'completed' ? 'text-emerald-400' : tx.status === 'pending' ? 'text-amber-400' : 'text-rose-400'} capitalize">${tx.status}</div>
+      </div>
+    </div>
+  `;
+}
+
+window.showTxDetail = (tx) => {
+  const isCredit = tx.type === 'credit';
+  openModal(`
+    <div class="flex items-center justify-between mb-6">
+      <h3 class="font-display text-xl font-bold text-white">Transaction Details</h3>
+      <button onclick="closeModal()" class="p-1 hover:bg-white/10 rounded-lg"><i data-lucide="x" class="w-5 h-5 text-slate-400"></i></button>
+    </div>
+    <div class="space-y-4">
+      <div class="flex items-center gap-3 p-4 bg-white/5 rounded-2xl border border-white/5">
+        <div class="w-12 h-12 rounded-xl flex items-center justify-center ${isCredit ? 'bg-emerald-500/10' : 'bg-rose-500/10'}">
+          <i data-lucide="${isCredit ? 'arrow-down-left' : 'arrow-up-right'}" class="w-6 h-6 ${isCredit ? 'text-emerald-400' : 'text-rose-400'}"></i>
+        </div>
+        <div class="flex-1">
+          <div class="font-semibold text-white">${tx.description || 'Transaction'}</div>
+          <div class="text-sm text-slate-400 capitalize">${tx.type}</div>
+        </div>
+        <div class="font-display text-2xl font-bold ${isCredit ? 'text-emerald-400' : 'text-white'}">
+          ${isCredit ? '+' : '-'}${fmt(tx.amount)}
+        </div>
+      </div>
+      <div class="grid grid-cols-2 gap-3">
+        ${[
+          ['Reference', tx.reference || 'N/A'],
+          ['Status', `<span class="capitalize ${tx.status === 'completed' ? 'text-emerald-400' : tx.status === 'pending' ? 'text-amber-400' : 'text-rose-400'}">${tx.status}</span>`],
+          ['Category', tx.category ? `<span class="capitalize">${tx.category}</span>` : 'N/A'],
+          ['Currency', tx.currency || 'USD'],
+          ['Date', fmtDateTime(tx.created_at)],
+          ['Account', tx.account_id ? 'Primary Account' : 'N/A']
+        ].map(([k, v]) => `
+          <div class="p-3 bg-white/5 rounded-xl border border-white/5">
+            <div class="text-xs text-slate-500 mb-1">${k}</div>
+            <div class="text-sm font-semibold text-white">${v}</div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `);
+};
+
+function renderBalanceChart() {
+  const ctx = $('#balanceChart');
+  if (!ctx) return;
+  if (state.charts.balance) state.charts.balance.destroy();
+
+  // Build running balance from oldest to newest
+  const sorted = [...state.transactions].reverse();
+  let running = 0;
+  const data = sorted.map(tx => {
+    running += tx.type === 'credit' ? Number(tx.amount) : -Number(tx.amount);
+    return running;
+  });
+  const labels = sorted.map(tx => fmtDate(tx.created_at));
+
+  state.charts.balance = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [{
+        label: 'Balance',
+        data,
+        borderColor: '#22D3EE',
+        backgroundColor: (ctx) => {
+          const g = ctx.chart.ctx.createLinearGradient(0, 0, 0, 250);
+          g.addColorStop(0, 'rgba(34, 211, 238, 0.3)');
+          g.addColorStop(1, 'rgba(34, 211, 238, 0)');
+          return g;
+        },
+        fill: true, tension: 0.4, borderWidth: 2.5,
+        pointBackgroundColor: '#22D3EE', pointRadius: 0, pointHoverRadius: 5
+      }]
+    },
+    options: {
+      responsive: true, maintainAspectRatio: false,
+      plugins: { legend: { display: false }, tooltip: { backgroundColor: 'rgba(10,17,40,0.9)', borderColor: 'rgba(34,211,238,0.3)', borderWidth: 1, callbacks: { label: (c) => fmt(c.parsed.y) } } },
+      scales: {
+        y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#64748B', callback: v => '$' + (v >= 1000 ? (v/1000).toFixed(1) + 'k' : v) } },
+        x: { grid: { display: false }, ticks: { color: '#64748B', maxTicksLimit: 6 } }
+      }
+    }
+  });
+}
+
+// ============ ACCOUNTS ============
+function renderAccounts() {
+  const total = state.accounts.reduce((s, a) => s + Number(a.balance || 0), 0);
+  $('#pageContent').innerHTML = `
+    <div class="mb-8">
+      <h1 class="font-display text-3xl md:text-4xl font-bold text-white mb-1">My Accounts</h1>
+      <p class="text-slate-400">Manage all your accounts in one place.</p>
+    </div>
+    <div class="grid md:grid-cols-3 gap-4 mb-6">
+      <div class="glass rounded-2xl p-5">
+        <div class="text-xs text-slate-400 mb-1">Total Balance</div>
+        <div class="font-display text-2xl font-bold text-white">${fmt(total)}</div>
+      </div>
+      <div class="glass rounded-2xl p-5">
+        <div class="text-xs text-slate-400 mb-1">Active Accounts</div>
+        <div class="font-display text-2xl font-bold text-white">${state.accounts.length}</div>
+      </div>
+      <div class="glass rounded-2xl p-5">
+        <div class="text-xs text-slate-400 mb-1">Combined Available</div>
+        <div class="font-display text-2xl font-bold text-white">${fmt(state.accounts.reduce((s, a) => s + Number(a.available_balance || a.balance || 0), 0))}</div>
+      </div>
+    </div>
+    <div class="glass rounded-2xl overflow-hidden">
+      <div class="p-6 border-b border-white/5"><h3 class="font-display font-bold text-white">Your Accounts</h3></div>
+      ${state.accounts.length === 0 ? emptyState('wallet', 'No accounts available', 'Your account information will appear here once an account has been created.') : `
+        <div class="divide-y divide-white/5">
+          ${state.accounts.map(a => `
+            <div class="p-6 hover:bg-white/5 transition flex flex-col md:flex-row md:items-center gap-4">
+              <div class="w-12 h-12 gradient-brand rounded-xl flex items-center justify-center flex-shrink-0">
+                <i data-lucide="wallet" class="w-6 h-6 text-white"></i>
+              </div>
+              <div class="flex-1">
+                <div class="font-semibold text-white capitalize">${a.account_type} Account</div>
+                <div class="text-sm text-slate-400 font-mono">${a.account_number}</div>
+              </div>
+              <div class="text-right">
+                <div class="font-display text-xl font-bold text-white">${fmt(a.balance)}</div>
+                <div class="text-xs text-slate-500">Available: ${fmt(a.available_balance || a.balance)} ${a.currency || 'USD'}</div>
+              </div>
+              <span class="px-3 py-1 bg-emerald-500/10 text-emerald-400 text-xs font-semibold rounded-full capitalize self-start border border-emerald-500/20">${a.status}</span>
+            </div>
+          `).join('')}
+        </div>
+      `}
+    </div>
+  `;
+  lucide.createIcons();
+}
+
+// ============ TRANSACTIONS ============
+function renderTransactions() {
+  let search = '', typeFilter = 'all', statusFilter = 'all', categoryFilter = 'all';
+  const categories = [...new Set(state.transactions.map(t => t.category).filter(Boolean))];
+
+  const render = () => {
+    let list = [...state.transactions];
+    if (search) list = list.filter(t => (t.description || '').toLowerCase().includes(search.toLowerCase()) || (t.reference || '').toLowerCase().includes(search.toLowerCase()));
+    if (typeFilter !== 'all') list = list.filter(t => t.type === typeFilter);
+    if (statusFilter !== 'all') list = list.filter(t => t.status === statusFilter);
+    if (categoryFilter !== 'all') list = list.filter(t => t.category === categoryFilter);
+
+    $('#pageContent').innerHTML = `
+      <div class="mb-8">
+        <h1 class="font-display text-3xl md:text-4xl font-bold text-white mb-1">Transactions</h1>
+        <p class="text-slate-400">View and manage all your transactions.</p>
+      </div>
+      <div class="glass rounded-2xl overflow-hidden">
+        <div class="p-6 border-b border-white/5 grid md:grid-cols-4 gap-3">
+          <div class="relative md:col-span-2">
+            <i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500"></i>
+            <input id="txSearch" type="text" placeholder="Search..." value="${search}" class="input-field w-full pl-10 pr-4 py-2 rounded-xl text-sm">
+          </div>
+          <select id="txType" class="input-field px-3 py-2 rounded-xl text-sm">
+            <option value="all" ${typeFilter==='all'?'selected':''}>All Types</option>
+            <option value="credit" ${typeFilter==='credit'?'selected':''}>Credit</option>
+            <option value="debit" ${typeFilter==='debit'?'selected':''}>Debit</option>
+            <option value="transfer" ${typeFilter==='transfer'?'selected':''}>Transfer</option>
+          </select>
+          <select id="txStatus" class="input-field px-3 py-2 rounded-xl text-sm">
+            <option value="all" ${statusFilter==='all'?'selected':''}>All Status</option>
+            <option value="completed" ${statusFilter==='completed'?'selected':''}>Completed</option>
+            <option value="pending" ${statusFilter==='pending'?'selected':''}>Pending</option>
+            <option value="failed" ${statusFilter==='failed'?'selected':''}>Failed</option>
+          </select>
+        </div>
+        ${categories.length > 1 ? `
+          <div class="px-6 py-3 border-b border-white/5 flex gap-2 overflow-x-auto no-scrollbar">
+            <button onclick="setCategoryFilter('all')" class="px-3 py-1 rounded-full text-xs font-semibold whitespace-nowrap ${categoryFilter==='all' ? 'bg-brand-cyan text-ink-950' : 'bg-white/5 text-slate-400 hover:bg-white/10'}">All Categories</button>
+            ${categories.map(c => `<button onclick="setCategoryFilter('${c}')" class="px-3 py-1 rounded-full text-xs font-semibold whitespace-nowrap capitalize ${categoryFilter===c ? 'bg-brand-cyan text-ink-950' : 'bg-white/5 text-slate-400 hover:bg-white/10'}">${c}</button>`).join('')}
+          </div>
+        ` : ''}
+        ${list.length === 0 ? emptyState('inbox', state.transactions.length === 0 ? 'No transactions yet' : 'No matching transactions', state.transactions.length === 0 ? 'Your recent account activity will appear here.' : 'Try adjusting your filters.') : `
+          <div class="divide-y divide-white/5">
+            ${list.map(tx => renderTransactionRow(tx)).join('')}
+          </div>
+          <div class="p-4 border-t border-white/5 text-xs text-slate-500 text-center">
+            Showing ${list.length} of ${state.transactions.length} transactions
+          </div>
+        `}
+      </div>
+    `;
+    lucide.createIcons();
+    $('#txSearch').addEventListener('input', (e) => { search = e.target.value; render(); });
+    $('#txType').addEventListener('change', (e) => { typeFilter = e.target.value; render(); });
+    $('#txStatus').addEventListener('change', (e) => { statusFilter = e.target.value; render(); });
+  };
+
+  window.setCategoryFilter = (c) => { categoryFilter = c; render(); };
+  render();
+}
+
+// ============ CARDS ============
+function renderCards() {
+  $('#pageContent').innerHTML = `
+    <div class="mb-8">
+      <h1 class="font-display text-3xl md:text-4xl font-bold text-white mb-1">Cards</h1>
+      <p class="text-slate-400">Manage your virtual and physical cards.</p>
+    </div>
+    ${state.cards.length === 0 ? `<div class="glass rounded-2xl">${emptyState('credit-card', 'No cards available', 'Your cards will appear here when issued.')}</div>` : `
+      <div class="grid md:grid-cols-2 gap-6 mb-6">
+        ${state.cards.map(card => `
+          <div class="gradient-card rounded-2xl p-6 text-white card-shine relative overflow-hidden border border-white/10">
+            <div class="flex justify-between items-start mb-8 relative z-10">
+              <div class="flex items-center gap-2">
+                <div class="w-8 h-8 gradient-brand rounded-lg flex items-center justify-center">
+                  <i data-lucide="landmark" class="w-4 h-4 text-white"></i>
+                </div>
+                <span class="font-display font-bold">Skyline Capital</span>
+              </div>
+              <span class="px-2 py-1 bg-white/10 rounded text-xs font-semibold backdrop-blur capitalize border border-white/10 ${card.status === 'frozen' ? 'bg-cyan-500/20 text-cyan-200' : ''}">${card.status}</span>
+            </div>
+            <div class="text-white/60 text-xs mb-1 relative z-10">Card Number</div>
+            <div class="font-mono text-xl tracking-wider mb-6 relative z-10">${card.masked_number}</div>
+            <div class="flex justify-between items-end relative z-10">
+              <div>
+                <div class="text-xs text-white/60 mb-1">Cardholder</div>
+                <div class="font-semibold">${card.cardholder_name || state.profile?.full_name || 'CARDHOLDER'}</div>
+              </div>
+              <div>
+                <div class="text-xs text-white/60 mb-1">Expires</div>
+                <div class="font-semibold">${card.expiry_month}/${card.expiry_year}</div>
+              </div>
+              <div class="font-display text-2xl font-bold italic opacity-80">${(card.card_type || 'visa').toUpperCase()}</div>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+      <div class="glass rounded-2xl p-6">
+        <h3 class="font-display font-bold text-white mb-4">Card Actions</h3>
+        <div class="grid md:grid-cols-3 gap-3">
+          <button onclick="toggleCardFreeze()" class="flex items-center gap-3 p-4 bg-white/5 hover:bg-white/10 rounded-xl transition text-left border border-white/5">
+            <div class="w-10 h-10 bg-cyan-500/10 rounded-lg flex items-center justify-center">
+              <i data-lucide="snowflake" class="w-5 h-5 text-cyan-400"></i>
+            </div>
+            <div><div class="font-semibold text-sm text-white">Freeze / Unfreeze</div><div class="text-xs text-slate-400">Temporarily disable</div></div>
+          </button>
+          <button onclick="showCardDetails()" class="flex items-center gap-3 p-4 bg-white/5 hover:bg-white/10 rounded-xl transition text-left border border-white/5">
+            <div class="w-10 h-10 bg-emerald-500/10 rounded-lg flex items-center justify-center">
+              <i data-lucide="eye" class="w-5 h-5 text-emerald-400"></i>
+            </div>
+            <div><div class="font-semibold text-sm text-white">View Details</div><div class="text-xs text-slate-400">See card info</div></div>
+          </button>
+          <button onclick="toast('Card request feature coming soon', 'info')" class="flex items-center gap-3 p-4 bg-white/5 hover:bg-white/10 rounded-xl transition text-left border border-white/5">
+            <div class="w-10 h-10 bg-amber-500/10 rounded-lg flex items-center justify-center">
+              <i data-lucide="plus" class="w-5 h-5 text-amber-400"></i>
+            </div>
+            <div><div class="font-semibold text-sm text-white">Request New Card</div><div class="text-xs text-slate-400">Order replacement</div></div>
+          </button>
+        </div>
+      </div>
+    `}
+  `;
+  lucide.createIcons();
+}
+
+window.toggleCardFreeze = async () => {
+  const card = state.cards[0];
+  if (!card) return;
+  const newStatus = card.status === 'active' ? 'frozen' : 'active';
+  const { error } = await sb.from('cards').update({ status: newStatus }).eq('id', card.id);
+  if (error) toast(error.message, 'error');
+  else {
+    card.status = newStatus;
+    toast(`Card ${newStatus === 'frozen' ? 'frozen' : 'unfrozen'} successfully`, 'success');
+    renderCards();
+  }
+};
+
+window.showCardDetails = () => {
+  const card = state.cards[0];
+  if (!card) return;
+  openModal(`
+    <div class="flex items-center justify-between mb-6">
+      <h3 class="font-display text-xl font-bold text-white">Card Details</h3>
+      <button onclick="closeModal()" class="p-1 hover:bg-white/10 rounded-lg"><i data-lucide="x" class="w-5 h-5 text-slate-400"></i></button>
+    </div>
+    <div class="space-y-3">
+      <div class="p-3 bg-white/5 rounded-xl border border-white/5">
+        <div class="text-xs text-slate-500 mb-1">Card Number</div>
+        <div class="text-sm font-mono font-semibold text-white">${card.masked_number}</div>
+      </div>
+      <div class="grid grid-cols-2 gap-3">
+        <div class="p-3 bg-white/5 rounded-xl border border-white/5">
+          <div class="text-xs text-slate-500 mb-1">Cardholder</div>
+          <div class="text-sm font-semibold text-white">${card.cardholder_name || state.profile?.full_name || 'N/A'}</div>
+        </div>
+        <div class="p-3 bg-white/5 rounded-xl border border-white/5">
+          <div class="text-xs text-slate-500 mb-1">Expires</div>
+          <div class="text-sm font-semibold text-white">${card.expiry_month}/${card.expiry_year}</div>
+        </div>
+      </div>
+      <div class="p-3 bg-amber-500/10 border border-amber-500/20 rounded-xl flex items-start gap-2">
+        <i data-lucide="shield-alert" class="w-4 h-4 text-amber-400 flex-shrink-0 mt-0.5"></i>
+        <div class="text-xs text-amber-200">For security, never share your CVV or full card number with anyone.</div>
+      </div>
+    </div>
+  `);
+};
+
+// ============ TRANSFERS ============
+function renderTransfers() {
+  $('#pageContent').innerHTML = `
+    <div class="mb-8">
+      <h1 class="font-display text-3xl md:text-4xl font-bold text-white mb-1">Transfer Money</h1>
+      <p class="text-slate-400">Send money securely to anyone, anywhere.</p>
+    </div>
+    <div class="grid lg:grid-cols-3 gap-6">
+      <div class="lg:col-span-2 glass rounded-2xl p-6">
+        <form id="transferForm" class="space-y-5">
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 mb-1.5 tracking-wider">BENEFICIARY</label>
+            <select id="trfBeneficiary" required class="input-field w-full px-4 py-3 rounded-xl">
+              <option value="">Select a beneficiary</option>
+              ${state.beneficiaries.map(b => `<option value="${b.id}">${b.name} — ${maskAccount(b.account_number)}</option>`).join('')}
+            </select>
+            ${state.beneficiaries.length === 0 ? `<p class="text-xs text-slate-500 mt-2">No beneficiaries yet. <a href="#/beneficiaries" class="text-brand-cyan">Add one</a></p>` : ''}
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 mb-1.5 tracking-wider">AMOUNT (USD)</label>
+            <div class="relative">
+              <span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 font-semibold">$</span>
+              <input type="number" id="trfAmount" required min="0.01" step="0.01" class="input-field w-full pl-8 pr-4 py-3 rounded-xl text-lg font-display font-bold" placeholder="0.00">
+            </div>
+            <div class="flex gap-2 mt-2">
+              ${[50, 100, 500, 1000].map(a => `<button type="button" onclick="document.getElementById('trfAmount').value=${a}" class="px-3 py-1 bg-white/5 hover:bg-white/10 rounded-lg text-xs font-medium transition border border-white/5">$${a}</button>`).join('')}
+            </div>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-slate-300 mb-1.5 tracking-wider">DESCRIPTION (OPTIONAL)</label>
+            <textarea id="trfDesc" rows="2" class="input-field w-full px-4 py-3 rounded-xl resize-none" placeholder="What's this for?"></textarea>
+          </div>
+          <div class="p-4 bg-amber-500/10 border border-amber-500/20 rounded-xl flex items-start gap-2">
+            <i data-lucide="alert-triangle" class="w-4 h-4 text-amber-400 flex-shrink-0 mt-0.5"></i>
+            <div class="text-xs text-amber-200">
+              <strong>Demo transfer interface.</strong> Real money movement requires a properly authorized payment or banking provider.
+            </div>
+          </div>
+          <button type="submit" id="trfBtn" class="btn-primary w-full font-semibold py-3.5 rounded-xl flex items-center justify-center gap-2">
+            <i data-lucide="send" class="w-4 h-4"></i> Review Transfer
+          </button>
+        </form>
+      </div>
+      <div class="gradient-card rounded-2xl p-6 text-white border border-white/10 h-fit">
+        <h3 class="font-display font-bold mb-4">Transfer Summary</h3>
+        <div class="space-y-3 text-sm">
+          <div class="flex justify-between"><span class="text-white/70">Available Balance</span><span class="font-semibold">${fmt(state.accounts[0]?.available_balance || state.accounts[0]?.balance || 0)}</span></div>
+          <div class="flex justify-between"><span class="text-white/70">Daily Limit</span><span class="font-semibold">$25,000</span></div>
+          <div class="flex justify-between"><span class="text-white/70">Transfer Fee</span><span class="font-semibold">$0.00</span></div>
+          <div class="border-t border-white/10 pt-3 flex justify-between"><span class="font-semibold">Processing</span><span class="font-semibold">Simulation</span></div>
+        </div>
+      </div>
+    </div>
+  `;
+  lucide.createIcons();
+
+  $('#transferForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const amount = parseFloat($('#trfAmount').value);
+    const benId = $('#trfBeneficiary').value;
+    const desc = $('#trfDesc').value;
+    const ben = state.beneficiaries.find(b => b.id === benId);
+    if (!ben) { toast('Please select a beneficiary', 'error'); return; }
+    const balance = Number(state.accounts[0]?.available_balance || state.accounts[0]?.balance || 0);
+    if (amount > balance) { toast('Insufficient funds', 'error'); return; }
+
+    openModal(`
+      <div class="flex items-center justify-between mb-6">
+        <h3 class="font-display text-xl font-bold text-white">Confirm Transfer</h3>
+        <button onclick="closeModal()" class="p-1 hover:bg-white/10 rounded-lg"><i data-lucide="x" class="w-5 h-5 text-slate-400"></i></button>
+      </div>
+      <div class="space-y-3 mb-6">
+        <div class="p-3 bg-white/5 rounded-xl border border-white/5 flex justify-between">
+          <span class="text-slate-400 text-sm">To</span>
+          <span class="font-semibold text-white text-sm">${ben.name}</span>
+        </div>
+        <div class="p-3 bg-white/5 rounded-xl border border-white/5 flex justify-between">
+          <span class="text-slate-400 text-sm">Bank</span>
+          <span class="font-semibold text-white text-sm">${ben.bank_name}</span>
+        </div>
+        <div class="p-3 bg-white/5 rounded-xl border border-white/5 flex justify-between">
+          <span class="text-slate-400 text-sm">Account</span>
+          <span class="font-mono font-semibold text-white text-sm">${maskAccount(ben.account_number)}</span>
+        </div>
+        <div class="p-4 bg-brand-cyan/10 border border-brand-cyan/20 rounded-xl text-center">
+          <div class="text-xs text-brand-cyan mb-1">Amount</div>
+          <div class="font-display text-3xl font-bold text-white">${fmt(amount)}</div>
+        </div>
+        ${desc ? `<div class="p-3 bg-white/5 rounded-xl border border-white/5"><div class="text-xs text-slate-400 mb-1">Description</div><div class="text-sm text-white">${desc}</div></div>` : ''}
+      </div>
+      <div class="flex gap-3">
+        <button onclick="closeModal()" class="btn-ghost flex-1 py-3 rounded-xl font-semibold">Cancel</button>
+        <button onclick="executeTransfer(${amount}, '${benId}', '${(desc||'').replace(/'/g, "\\'")}')" class="btn-primary flex-1 py-3 rounded-xl font-semibold">Confirm</button>
+      </div>
+    `);
+  });
+}
+
+window.executeTransfer = async (amount, benId, desc) => {
+  const ben = state.beneficiaries.find(b => b.id === benId);
+  const reference = 'TRF' + Date.now().toString().slice(-8);
+  closeModal();
+  toast('Processing transfer...', 'info');
+
+  const { error } = await sb.from('transactions').insert({
+    user_id: state.user.id,
+    account_id: state.accounts[0]?.id,
+    type: 'transfer',
+    category: 'transfer',
+    description: desc || `Transfer to ${ben.name}`,
+    amount: amount,
+    currency: 'USD',
+    reference: reference,
+    status: 'completed'
+  });
+
+  if (error) { toast('Transfer failed: ' + error.message, 'error'); return; }
+
+  // Update balance (simulation)
+  const currentBalance = Number(state.accounts[0]?.balance || 0);
+  await sb.from('accounts').update({
+    balance: currentBalance - amount,
+    available_balance: Math.max(0, Number(state.accounts[0]?.available_balance || 0) - amount)
+  }).eq('id', state.accounts[0]?.id);
+
+  openModal(`
+    <div class="text-center">
+      <div class="w-20 h-20 bg-emerald-500/10 rounded-full flex items-center justify-center mx-auto mb-4 border border-emerald-500/20">
+        <i data-lucide="check-circle-2" class="w-10 h-10 text-emerald-400"></i>
+      </div>
+      <h3 class="font-display text-2xl font-bold text-white mb-2">Transfer Submitted</h3>
+      <p class="text-slate-400 mb-6 text-sm">This is a simulation. No real money has moved.</p>
+      <div class="bg-white/5 rounded-xl p-4 mb-6 text-left space-y-2 border border-white/5">
+        <div class="flex justify-between text-sm"><span class="text-slate-400">Amount</span><span class="font-display font-bold text-white">${fmt(amount)}</span></div>
+        <div class="flex justify-between text-sm"><span class="text-slate-400">To</span><span class="font-semibold text-white">${ben.name}</span></div>
+        <div class="flex justify-between text-sm"><span class="text-slate-400">Reference</span><span class="font-mono font-semibold text-white">${reference}</span></div>
+      </div>
+      <button onclick="closeModal(); navigate('/transactions');" class="btn-primary w-full py-3 rounded-xl font-semibold">View Transactions</button>
+    </div>
+  `);
+  lucide.createIcons();
+  await loadUserData();
+};
+
+// ============ PAYMENTS ============
+function renderPayments() {
+  $('#pageContent').innerHTML = `
+    <div class="mb-8">
+      <h1 class="font-display text-3xl md:text-4xl font-bold text-white mb-1">Payments</h1>
+      <p class="text-slate-400">Manage your bills and scheduled payments.</p>
+    </div>
+    <div class="glass rounded-2xl">${emptyState('receipt', 'No payments scheduled', 'Your upcoming bill payments will appear here.')}</div>
+  `;
+  lucide.createIcons();
+}
+
+// ============ BENEFICIARIES ============
+function renderBeneficiaries() {
+  $('#pageContent').innerHTML = `
+    <div class="mb-8 flex items-center justify-between flex-wrap gap-4">
+      <div>
+        <h1 class="font-display text-3xl md:text-4xl font-bold text-white mb-1">Beneficiaries</h1>
+        <p class="text-slate-400">Manage your saved recipients.</p>
+      </div>
+      <button onclick="openAddBeneficiary()" class="btn-primary px-5 py-2.5 rounded-xl font-semibold flex items-center gap-2">
+        <i data-lucide="plus" class="w-4 h-4"></i> Add Beneficiary
+      </button>
+    </div>
+    <div class="glass rounded-2xl overflow-hidden">
+      ${state.beneficiaries.length === 0 ? emptyState('users', 'No beneficiaries added', 'Add a beneficiary to make future transfers easier.') : `
+        <div class="divide-y divide-white/5">
+          ${state.beneficiaries.map(b => `
+            <div class="p-5 hover:bg-white/5 transition flex items-center gap-4">
+              <div class="w-11 h-11 gradient-brand rounded-xl flex items-center justify-center flex-shrink-0 text-white font-bold">${b.name.charAt(0).toUpperCase()}</div>
+              <div class="flex-1 min-w-0">
+                <div class="font-semibold text-white truncate">${b.name}</div>
+                <div class="text-xs text-slate-400">${b.bank_name} · <span class="font-mono">${maskAccount(b.account_number)}</span></div>
+              </div>
+              <div class="flex gap-2">
+                <button onclick="deleteBeneficiary('${b.id}')" class="p-2 hover:bg-rose-500/10 rounded-lg text-rose-400 transition"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      `}
+    </div>
+  `;
+  lucide.createIcons();
+}
+
+window.openAddBeneficiary = () => {
+  openModal(`
+    <div class="flex items-center justify-between mb-6">
+      <h3 class="font-display text-xl font-bold text-white">Add Beneficiary</h3>
+      <button onclick="closeModal()" class="p-1 hover:bg-white/10 rounded-lg"><i data-lucide="x" class="w-5 h-5 text-slate-400"></i></button>
+    </div>
+    <form id="benForm" class="space-y-4">
+      <div>
+        <label class="block text-xs font-semibold text-slate-300 mb-1.5 tracking-wider">NAME</label>
+        <input type="text" id="benName" required class="input-field w-full px-4 py-2.5 rounded-xl" placeholder="John Doe">
+      </div>
+      <div>
+        <label class="block text-xs font-semibold text-slate-300 mb-1.5 tracking-wider">BANK NAME</label>
+        <input type="text" id="benBank" required class="input-field w-full px-4 py-2.5 rounded-xl" placeholder="Bank of Example">
+      </div>
+      <div>
+        <label class="block text-xs font-semibold text-slate-300 mb-1.5 tracking-wider">ACCOUNT NUMBER</label>
+        <input type="text" id="benAccount" required class="input-field w-full px-4 py-2.5 rounded-xl font-mono" placeholder="0000000000">
+      </div>
+      <button type="submit" class="btn-primary w-full py-3 rounded-xl font-semibold">Save Beneficiary</button>
+    </form>
+  `);
+  $('#benForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const { error } = await sb.from('beneficiaries').insert({
+      user_id: state.user.id,
+      name: $('#benName').value,
+      bank_name: $('#benBank').value,
+      account_number: $('#benAccount').value
+    });
+    if (error) toast(error.message, 'error');
+    else {
+      toast('Beneficiary added', 'success');
+      closeModal();
+      await loadUserData();
+      renderBeneficiaries();
+    }
+  });
+};
+
+window.deleteBeneficiary = async (id) => {
+  if (!confirm('Remove this beneficiary?')) return;
+  const { error } = await sb.from('beneficiaries').delete().eq('id', id);
+  if (error) toast(error.message, 'error');
+  else {
+    toast('Beneficiary removed', 'success');
+    await loadUserData();
+    renderBeneficiaries();
+  }
+};
+
+// ============ STATEMENTS ============
+function renderStatements() {
+  $('#pageContent').innerHTML = `
+    <div class="mb-8">
+      <h1 class="font-display text-3xl md:text-4xl font-bold text-white mb-1">Statements</h1>
+      <p class="text-slate-400">Download your account statements.</p>
+    </div>
+    <div class="glass rounded-2xl">${emptyState('file-text', 'No statements available', 'Your monthly statements will appear here once generated.')}</div>
+  `;
+  lucide.createIcons();
+}
+
+// ============ NOTIFICATIONS ============
+function renderNotifications() {
+  $('#pageContent').innerHTML = `
+    <div class="mb-8 flex items-center justify-between flex-wrap gap-4">
+      <div>
+        <h1 class="font-display text-3xl md:text-4xl font-bold text-white mb-1">Notifications</h1>
+        <p class="text-slate-400">Stay updated with your account activity.</p>
+      </div>
+      ${state.notifications.length > 0 ? `<button onclick="markAllRead()" class="btn-ghost px-4 py-2 rounded-xl text-sm font-semibold">Mark all as read</button>` : ''}
+    </div>
+    <div class="glass rounded-2xl overflow-hidden">
+      ${state.notifications.length === 0 ? emptyState('bell-off', "You're all caught up", 'You have no notifications at this time.') : `
+        <div class="divide-y divide-white/5">
+          ${state.notifications.map(n => `
+            <div class="p-5 hover:bg-white/5 transition flex items-start gap-4 ${!n.is_read ? 'bg-brand-cyan/5' : ''}">
+              <div class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 ${n.type === 'success' ? 'bg-emerald-500/10' : n.type === 'warning' ? 'bg-amber-500/10' : n.type === 'error' ? 'bg-rose-500/10' : 'bg-brand-cyan/10'}">
+                <i data-lucide="${n.type === 'success' ? 'check-circle-2' : n.type === 'warning' ? 'alert-triangle' : n.type === 'error' ? 'x-circle' : 'info'}" class="w-5 h-5 ${n.type === 'success' ? 'text-emerald-400' : n.type === 'warning' ? 'text-amber-400' : n.type === 'error' ? 'text-rose-400' : 'text-brand-cyan'}"></i>
+              </div>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center gap-2 mb-1">
+                  <div class="font-semibold text-white text-sm">${n.title}</div>
+                  ${!n.is_read ? '<span class="w-2 h-2 bg-brand-cyan rounded-full"></span>' : ''}
+                </div>
+                <div class="text-sm text-slate-400 mb-1">${n.message}</div>
+                <div class="text-xs text-slate-500">${fmtRelative(n.created_at)}</div>
+              </div>
+              ${!n.is_read ? `<button onclick="markRead('${n.id}')" class="text-xs text-brand-cyan hover:text-brand-blue font-semibold">Mark read</button>` : ''}
+            </div>
+          `).join('')}
+        </div>
+      `}
+    </div>
+  `;
+  lucide.createIcons();
+}
+
+window.markRead = async (id) => {
+  await sb.from('notifications').update({ is_read: true }).eq('id', id);
+  await loadUserData();
+  renderNotifications();
+};
+window.markAllRead = async () => {
+  await sb.from('notifications').update({ is_read: true }).eq('user_id', state.user.id).eq('is_read', false);
+  await loadUserData();
+  renderNotifications();
+  toast('All notifications marked as read', 'success');
+};
+
+// ============ PROFILE ============
+function renderProfile() {
+  const p = state.profile || {};
+  const name = p.full_name || state.user.email.split('@')[0];
+  $('#pageContent').innerHTML = `
+    <div class="mb-8">
+      <h1 class="font-display text-3xl md:text-4xl font-bold text-white mb-1">Profile</h1>
+      <p class="text-slate-400">Manage your personal information.</p>
+    </div>
+    <div class="grid lg:grid-cols-3 gap-6">
+      <div class="glass rounded-2xl p-6 text-center">
+        <div class="w-24 h-24 gradient-brand rounded-full flex items-center justify-center text-white text-3xl font-bold mx-auto mb-4 pulse-glow">
+          ${name.charAt(0).toUpperCase()}
+        </div>
+        <h3 class="font-display font-bold text-white text-lg">${name}</h3>
+        <p class="text-sm text-slate-400 mb-4">${state.user.email}</p>
+        <div class="flex items-center justify-center gap-2 text-xs text-emerald-400 bg-emerald-500/10 px-3 py-1.5 rounded-full mx-auto w-fit border border-emerald-500/20">
+          <i data-lucide="shield-check" class="w-3 h-3"></i> Verified Account
+        </div>
+        <div class="mt-4 pt-4 border-t border-white/5 text-xs text-slate-500">
+          Member since ${fmtDate(p.created_at)}
+        </div>
+      </div>
+      <div class="lg:col-span-2 glass rounded-2xl p-6">
+        <h3 class="font-display font-bold text-white mb-6">Personal Information</h3>
+        <form id="profileForm" class="space-y-4">
+          <div class="grid md:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 mb-1.5 tracking-wider">FULL NAME</label>
+              <input type="text" id="pfName" value="${p.full_name || ''}" class="input-field w-full px-4 py-2.5 rounded-xl">
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 mb-1.5 tracking-wider">EMAIL</label>
+              <input type="email" value="${state.user.email}" disabled class="w-full px-4 py-2.5 rounded-xl bg-white/5 text-slate-500 border border-white/5">
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-300 mb-1.5 tracking-wider">PHONE</label>
+              <input type="tel" id="pfPhone" value="${p.phone || ''}" class="input-field w-full px-4 py-2.5 rounded-xl">
+            </div>
+          </div>
+          <button type="submit" id="pfBtn" class="btn-primary px-6 py-2.5 rounded-xl font-semibold">Save Changes</button>
+        </form>
+      </div>
+    </div>
+  `;
+  lucide.createIcons();
+
+  $('#profileForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn = $('#pfBtn');
+    btn.disabled = true;
+    btn.textContent = 'Saving...';
+    const { error } = await sb.from('profiles').update({
+      full_name: $('#pfName').value,
+      phone: $('#pfPhone').value,
+      updated_at: new Date().toISOString()
+    }).eq('user_id', state.user.id);
+    btn.disabled = false;
+    btn.textContent = 'Save Changes';
+    if (error) toast(error.message, 'error');
+    else {
+      toast('Profile updated', 'success');
+      await loadUserData();
+      renderProfile();
+    }
+  });
+}
+
+// ============ SECURITY ============
+function renderSecurity() {
+  $('#pageContent').innerHTML = `
+    <div class="mb-8">
+      <h1 class="font-display text-3xl md:text-4xl font-bold text-white mb-1">Security</h1>
+      <p class="text-slate-400">Keep your account safe and secure.</p>
+    </div>
+    <div class="grid md:grid-cols-2 gap-6">
+      <div class="glass rounded-2xl p-6">
+        <h3 class="font-display font-bold text-white mb-4 flex items-center gap-2"><i data-lucide="shield" class="w-5 h-5 text-brand-cyan"></i> Password</h3>
+        <p class="text-sm text-slate-400 mb-4">Change your password regularly to keep your account secure.</p>
+        <button onclick="openChangePw()" class="btn-ghost w-full py-2.5 rounded-xl font-semibold flex items-center justify-center gap-2">
+          <i data-lucide="key" class="w-4 h-4"></i> Change Password
+        </button>
+      </div>
+      <div class="glass rounded-2xl p-6">
+        <h3 class="font-display font-bold text-white mb-4 flex items-center gap-2"><i data-lucide="smartphone" class="w-5 h-5 text-brand-cyan"></i> Two-Factor Auth</h3>
+        <p class="text-sm text-slate-400 mb-4">Add an extra layer of security to your account.</p>
+        <button onclick="toast('Two-factor authentication coming soon', 'info')" class="btn-ghost w-full py-2.5 rounded-xl font-semibold flex items-center justify-center gap-2">
+          <i data-lucide="shield-plus" class="w-4 h-4"></i> Enable 2FA
+          <span class="text-xs text-amber-400 ml-1">(Coming soon)</span>
+        </button>
+      </div>
+      <div class="glass rounded-2xl p-6 md:col-span-2">
+        <h3 class="font-display font-bold text-white mb-4 flex items-center gap-2"><i data-lucide="monitor" class="w-5 h-5 text-brand-cyan"></i> Active Sessions</h3>
+        <div class="p-4 bg-white/5 rounded-xl border border-white/5 flex items-center gap-4">
+          <div class="w-10 h-10 bg-brand-cyan/10 rounded-xl flex items-center justify-center">
+            <i data-lucide="monitor" class="w-5 h-5 text-brand-cyan"></i>
+          </div>
+          <div class="flex-1">
+            <div class="font-semibold text-white text-sm">Current Session</div>
+            <div class="text-xs text-slate-400">${navigator.userAgent.slice(0, 60)}...</div>
+          </div>
+          <span class="bg-emerald-500/10 text-emerald-400 text-xs font-semibold px-2 py-1 rounded-full border border-emerald-500/20">Active</span>
+        </div>
+      </div>
+    </div>
+  `;
+  lucide.createIcons();
+}
+
+window.openChangePw = () => {
+  openModal(`
+    <div class="flex items-center justify-between mb-6">
+      <h3 class="font-display text-xl font-bold text-white">Change Password</h3>
+      <button onclick="closeModal()" class="p-1 hover:bg-white/10 rounded-lg"><i data-lucide="x" class="w-5 h-5 text-slate-400"></i></button>
+    </div>
+    <form id="pwForm" class="space-y-4">
+      <div>
+        <label class="block text-xs font-semibold text-slate-300 mb-1.5 tracking-wider">NEW PASSWORD</label>
+        <input type="password" id="newPw" required minlength="8" class="input-field w-full px-4 py-2.5 rounded-xl" placeholder="Min. 8 characters">
+      </div>
+      <div>
+        <label class="block text-xs font-semibold text-slate-300 mb-1.5 tracking-wider">CONFIRM PASSWORD</label>
+        <input type="password" id="confirmPw" required class="input-field w-full px-4 py-2.5 rounded-xl">
+      </div>
+      <button type="submit" class="btn-primary w-full py-2.5 rounded-xl font-semibold">Update Password</button>
+    </form>
+  `);
+  $('#pwForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if ($('#newPw').value !== $('#confirmPw').value) { toast('Passwords do not match', 'error'); return; }
+    const { error } = await sb.auth.updateUser({ password: $('#newPw').value });
+    if (error) toast(error.message, 'error');
+    else { toast('Password updated', 'success'); closeModal(); }
+  });
+};
+
+// ============ SUPPORT ============
+function renderSupport() {
+  $('#pageContent').innerHTML = `
+    <div class="mb-8 flex items-center justify-between flex-wrap gap-4">
+      <div>
+        <h1 class="font-display text-3xl md:text-4xl font-bold text-white mb-1">Support</h1>
+        <p class="text-slate-400">Get help from our support team.</p>
+      </div>
+      <button onclick="openNewTicket()" class="btn-primary px-5 py-2.5 rounded-xl font-semibold flex items-center gap-2">
+        <i data-lucide="plus" class="w-4 h-4"></i> New Ticket
+      </button>
+    </div>
+    <div class="glass rounded-2xl overflow-hidden">
+      ${state.tickets.length === 0 ? emptyState('life-buoy', 'No support tickets', 'Submit a ticket and our team will get back to you.') : `
+        <div class="divide-y divide-white/5">
+          ${state.tickets.map(t => `
+            <div class="p-5 hover:bg-white/5 transition">
+              <div class="flex items-start justify-between gap-4 mb-2">
+                <h4 class="font-semibold text-white">${t.subject}</h4>
+                <span class="px-2 py-1 text-xs font-semibold rounded-full capitalize ${t.status === 'open' ? 'bg-amber-500/10 text-amber-400 border border-amber-500/20' : t.status === 'resolved' ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 'bg-sky-500/10 text-sky-400 border border-sky-500/20'}">${t.status}</span>
+              </div>
+              <p class="text-sm text-slate-400 mb-2 line-clamp-2">${t.message}</p>
+              <div class="text-xs text-slate-500">${fmtDateTime(t.created_at)}</div>
+            </div>
+          `).join('')}
+        </div>
+      `}
+    </div>
+  `;
+  lucide.createIcons();
+}
+
+window.openNewTicket = () => {
+  openModal(`
+    <div class="flex items-center justify-between mb-6">
+      <h3 class="font-display text-xl font-bold text-white">New Support Ticket</h3>
+      <button onclick="closeModal()" class="p-1 hover:bg-white/10 rounded-lg"><i data-lucide="x" class="w-5 h-5 text-slate-400"></i></button>
+    </div>
+    <form id="ticketForm" class="space-y-4">
+      <div>
+        <label class="block text-xs font-semibold text-slate-300 mb-1.5 tracking-wider">SUBJECT</label>
+        <input type="text" id="tkSubject" required class="input-field w-full px-4 py-2.5 rounded-xl" placeholder="Brief description">
+      </div>
+      <div>
+        <label class="block text-xs font-semibold text-slate-300 mb-1.5 tracking-wider">MESSAGE</label>
+        <textarea id="tkMessage" required rows="5" class="input-field w-full px-4 py-2.5 rounded-xl resize-none" placeholder="Describe your issue..."></textarea>
+      </div>
+      <button type="submit" class="btn-primary w-full py-3 rounded-xl font-semibold">Submit Ticket</button>
+    </form>
+  `);
+  $('#ticketForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const { error } = await sb.from('support_tickets').insert({
+      user_id: state.user.id,
+      subject: $('#tkSubject').value,
+      message: $('#tkMessage').value
+    });
+    if (error) toast(error.message, 'error');
+    else {
+      toast('Ticket submitted', 'success');
+      closeModal();
+      await loadUserData();
+      renderSupport();
+    }
+  });
+};
+
+// ============ INIT ============
+window.addEventListener('DOMContentLoaded', () => {
+  if (!sb || SUPABASE_URL === 'YOUR_SUPABASE_URL') {
+    renderSetupScreen();
+    return;
+  }
+  router();
+});
+</script>
+</body>
+</html>
